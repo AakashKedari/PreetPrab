@@ -98,6 +98,8 @@ class Product {
     "image": image,
     "categories": List<dynamic>.from(categories.map((x) => categoryEnumValues.reverse[x])),
   };
+
+
 }
 
 enum CategoryEnum {

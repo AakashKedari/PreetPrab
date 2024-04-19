@@ -3,7 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:preetprab/screens/home.dart';
 
+class CustomImageCache extends WidgetsFlutterBinding {
+  @override
+  ImageCache createImageCache() {
+    ImageCache imageCache = super.createImageCache();
+    // Set your image cache size
+    imageCache.maximumSizeBytes = 1024 * 1024 * 100; // 100 MB
+    return imageCache;
+  }
+}
+
 void main() {
+
+  CustomImageCache();
   runApp(const MyApp());
 }
 

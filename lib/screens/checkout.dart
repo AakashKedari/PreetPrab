@@ -26,7 +26,9 @@ class _CheckOutState extends State<CheckOut> {
               ),
               leading: IconButton(
                 icon: const Icon(Icons.keyboard_arrow_left),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
               bottom: const TabBar(
                 tabAlignment: TabAlignment.center,
