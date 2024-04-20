@@ -10,6 +10,3 @@ ShopProductsDetails? allProducts;
 
 List<Product> savedProducts = [];
 
-List<Product> ascProducts = [];
-List <Product> dscProducts = [];
-

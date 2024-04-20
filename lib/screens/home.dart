@@ -1,9 +1,11 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:preetprab/screens/productsTab.dart';
 import 'package:preetprab/screens/searchTab.dart';
 import 'package:preetprab/screens/settingsTab.dart';
+import '../controllers/products_controller.dart';
 import 'cartTab.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,11 +18,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
 
+  final ProductsController productsController = Get.put(ProductsController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-
         elevation: 50,
         type: BottomNavigationBarType.shifting,
         onTap: (index) {
@@ -74,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
       IndexedStack(
         index: currentIndex,
         children: [
-           const FirstTab(),SearchCategory(),  CartTab(), ProfileTab(),
+            FirstTab(),SearchCategory(),  CartTab(), ProfileTab(),
         ],
       )
       // currentIndex == 0 ? const FirstTab() : currentIndex == 1 ? SearchCategory() : currentIndex == 2 ? CartTab() : ProfileTab()
