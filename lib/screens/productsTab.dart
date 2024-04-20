@@ -6,9 +6,9 @@ import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
 
 class FirstTab extends StatelessWidget {
-   FirstTab({super.key});
+  FirstTab({super.key});
 
-  ProductsController productsController = Get.find();
+  ProductsController productsController = Get.find<ProductsController>();
 
   @override
   Widget build(BuildContext context) {
@@ -52,122 +52,120 @@ class FirstTab extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
             child: Column(
               children: [
-                if (productsController.filterName.value != '')
-                  Obx(
-            () => Chip(
-                      label: Text(productsController.filterName.value),
-                      onDeleted: () {
-                        productsController.filterName.value = '';
-                      },
-                    ),
-                  ),
+
                 Obx(() {
-                  if (productsController.allShopProductDetails.value == null) {
+                  if (productsController.allShopProductDetails.value == null && productsController.dscProducts.isEmpty && productsController.ascProducts.isEmpty) {
                     return const Center(child: CircularProgressIndicator());
                   } else {
                     final fetchedProduct = productsController
                         .allShopProductDetails.value!.products;
-                    return GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
+                    return Column(
+                      children: [
+                        if(productsController.filterName.value != '')
+                          Chip(label: Text(productsController.filterName.value)),
+                        GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 10,
                                 mainAxisSpacing: 10,
                                 childAspectRatio: 0.5),
-                        itemCount: fetchedProduct.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => ProductInfo(
-                                          product: productsController
-                                                      .filterName.value ==
+                            itemCount: fetchedProduct.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => ProductInfo(
+                                              product: productsController
+                                                  .filterName.value ==
                                                   'Price ASC'
-                                              ? productsController
-                                                  .ascProducts[index]
-                                              : productsController
-                                                          .filterName.value ==
-                                                      'Price DSC'
                                                   ? productsController
-                                                      .dscProducts[index]
+                                                  .ascProducts[index]
+                                                  : productsController
+                                                  .filterName.value ==
+                                                  'Price DSC'
+                                                  ? productsController
+                                                  .dscProducts[index]
                                                   : fetchedProduct[index])));
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(20)),
-                                  child: Stack(
-                                    children: [
-                                      const Positioned.fill(
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child:
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(20)),
+                                      child: Stack(
+                                        children: [
+                                          const Positioned.fill(
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child:
                                               CircularProgressIndicator(), // Add CircularProgressIndicator here
-                                        ),
-                                      ),
-                                      Container(
-                                        height:
+                                            ),
+                                          ),
+                                          Container(
+                                            height:
                                             MediaQuery.of(context).size.height *
                                                 0.3,
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(20)),
-                                          image: DecorationImage(
-                                            image: CachedNetworkImageProvider(
-                                              productsController
-                                                          .filterName.value ==
+                                            decoration: BoxDecoration(
+                                              borderRadius: const BorderRadius.all(
+                                                  Radius.circular(20)),
+                                              image: DecorationImage(
+                                                image: CachedNetworkImageProvider(
+                                                  productsController
+                                                      .filterName.value ==
                                                       'Price ASC'
-                                                  ? productsController
-                                                      .ascProducts[index].image
-                                                  : productsController
-                                                              .filterName
-                                                              .value ==
-                                                          'Price DSC'
                                                       ? productsController
-                                                          .dscProducts[index]
-                                                          .image
+                                                      .ascProducts[index]!.image
+                                                      : productsController
+                                                      .filterName
+                                                      .value ==
+                                                      'Price DSC'
+                                                      ? productsController
+                                                      .dscProducts[index]!
+                                                      .image
                                                       : fetchedProduct[index]
-                                                          .image,
+                                                      .image,
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
-                                            fit: BoxFit.cover,
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    productsController.filterName.value ==
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        productsController.filterName.value ==
                                             'Price ASC'
-                                        ? productsController
-                                            .ascProducts[index].title
-                                        : productsController.filterName.value ==
-                                                'Price DSC'
                                             ? productsController
-                                                .dscProducts[index].title
+                                            .ascProducts[index]!.title
+                                            : productsController.filterName.value ==
+                                            'Price DSC'
+                                            ? productsController
+                                            .dscProducts[index]!.title
                                             : fetchedProduct[index].title,
-                                    style:
+                                        style:
                                         Theme.of(context).textTheme.labelLarge,
-                                    overflow: TextOverflow.fade,
-                                  ),
+                                        overflow: TextOverflow.fade,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Rs. ${productsController.filterName.value == 'Price ASC' ? productsController.ascProducts[index]!.price : productsController.filterName.value == 'Price DSC' ? productsController.dscProducts[index]!.price : fetchedProduct[index].price}",
+                                      style: Theme.of(context).textTheme.labelSmall,
+                                      overflow: TextOverflow.fade,
+                                    )
+                                  ],
                                 ),
-                                Text(
-                                  "Rs. ${productsController.filterName.value == 'Price ASC' ? productsController.ascProducts[index].price : productsController.filterName.value == 'Price DSC' ? productsController.dscProducts[index].price : fetchedProduct[index].price}",
-                                  style: Theme.of(context).textTheme.labelSmall,
-                                  overflow: TextOverflow.fade,
-                                )
-                              ],
-                            ),
-                          );
-                        });
+                              );
+                            })
+
+                      ],
+                    );
                   }
                 })
                 // GridView.builder(

@@ -6,7 +6,4 @@ List <int> cartPrices = [30,40,50];
 
 const String apiUrl = 'https://preetprab.com/wp-json/custom/v1/data';
 
-ShopProductsDetails? allProducts;
-
-List<Product> savedProducts = [];
 

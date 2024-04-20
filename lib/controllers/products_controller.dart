@@ -1,32 +1,28 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/response/response.dart';
-import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
 import 'package:http/http.dart' as http;
-
 import '../const.dart';
 
 class ProductsController extends GetxController {
   var allShopProductDetails = Rx<ShopProductsDetails?>(null);
-  var ascProducts = RxList<Product>();
-  var dscProducts = RxList<Product>();
+  var ascProducts = <Product>[].obs;
+  var dscProducts = <Product>[].obs;
   var filterName = ''.obs;
+  var savedProducts = <Product>[].obs;
 
   // Function to sort products by price in ascending order
   void sortProductsByPriceAsc() {
-    List<Product> temp = List.from(allProducts!.products);
-    allProducts!.products
+    List<Product> temp = List.from(allShopProductDetails.value!.products);
+    allShopProductDetails.value!.products
         .sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
 
-    ascProducts.value = allProducts!.products;
-    allProducts!.products = temp;
+    ascProducts.value = allShopProductDetails.value!.products;
+    allShopProductDetails.value!.products = temp;
 
     filterName.value = 'Price ASC';
   }
-
 // Function to sort products by price in descending order
   void sortProductsByPriceDesc() {
 

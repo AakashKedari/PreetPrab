@@ -1,6 +1,10 @@
 
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
 import '../const.dart';
 import 'checkout.dart';
@@ -12,13 +16,16 @@ class CartTab extends StatefulWidget {
   State<CartTab> createState() => _CartTabState();
 }
 
-class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin<CartTab>{
+class _CartTabState extends State<CartTab> {
+  ProductsController productsController = Get.find<ProductsController>();
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     print('Cart Build Method Called');
+    for(int i=0;i<productsController.savedProducts.length;i++){
+      log(productsController.savedProducts[i].title);
+    }
     num totalCost =
-        savedProducts.fold(0, (sum, item) => sum + int.parse(item.price));
+        productsController.savedProducts.fold(0, (sum, item) => sum + int.parse(item.price));
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -52,7 +59,7 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin<Ca
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: savedProducts.length,
+                itemCount: productsController.savedProducts.length,
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
@@ -60,30 +67,30 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin<Ca
                           context,
                           MaterialPageRoute(
                               builder: (_) =>
-                                  ProductInfo(product: savedProducts[index])));
+                                  ProductInfo(product: productsController.savedProducts[index])));
                     },
                     child: Card(
                       child: ListTile(
-                        trailing: Text("Rs. ${savedProducts[index].price}"),
+                        trailing: Text("Rs. ${productsController.savedProducts[index].price}"),
                         leading: IconButton(
                           icon: const Icon(Icons.remove_circle_outline),
                           onPressed: () {
                             setState(() {
-                              savedProducts.removeAt(index);
+                              productsController.savedProducts.removeAt(index);
                             });
                           },
                         ),
                         title: Row(
                           children: [
                             SizedBox(
-                                height: 100,
-                                width: 100,
+                                height:100,
+                                width:100,
                                 child: CachedNetworkImage(
-                                  imageUrl: savedProducts[index].image,
+                                  imageUrl: productsController.savedProducts[index].image,
                                 )),
                             Flexible(
                                 child: Text(
-                              savedProducts[index].title,
+                              productsController.savedProducts[index].title,
                               style: TextStyle(fontSize: 10),
                               maxLines: 3,
                             ))
@@ -106,7 +113,7 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin<Ca
                             fontWeight: FontWeight.w100, color: Colors.grey),
                       ),
                       Text(
-                        savedProducts.length.toString(),
+                        productsController.savedProducts.length.toString(),
                         style: const TextStyle(
                             fontWeight: FontWeight.w100, color: Colors.grey),
                       )
@@ -130,7 +137,7 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin<Ca
                   ),
                   InkWell(
                     onTap: () {
-                      savedProducts.clear();
+                      productsController.savedProducts.clear();
                       setState(() {});
                     },
                     child: Container(
@@ -152,7 +159,4 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin<Ca
     );
   }
 
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }
