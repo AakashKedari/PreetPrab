@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/screens/home.dart';
 
 class CustomImageCache extends WidgetsFlutterBinding {
@@ -25,6 +27,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ProductsController productsController = Get.put(ProductsController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -34,7 +37,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      home:  const HomeScreen(),
+      home:  HomeScreen(),
     );
   }
 }

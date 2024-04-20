@@ -1,13 +1,16 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-import 'package:preetprab/const.dart';
+import 'package:get/get.dart';
+import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
 
 class ProductInfo extends StatefulWidget {
-  final Product product;
+  final Product? product;
 
   const ProductInfo({super.key, required this.product});
 
@@ -16,6 +19,7 @@ class ProductInfo extends StatefulWidget {
 }
 
 class _ProductInfoState extends State<ProductInfo> {
+  ProductsController productsController = Get.find<ProductsController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +35,7 @@ class _ProductInfoState extends State<ProductInfo> {
               Stack(
                 children: [
                   CachedNetworkImage(
-                    imageUrl: widget.product.image,
+                    imageUrl: widget.product!.image,
                     progressIndicatorBuilder:
                         (context, string, downloadProgress) {
                       return const SizedBox(
@@ -61,7 +65,7 @@ class _ProductInfoState extends State<ProductInfo> {
                                     child: Center(
                                       child: CachedNetworkImage(
                                         fit: BoxFit.fill,
-                                        imageUrl: widget.product.image,
+                                        imageUrl: widget.product!.image,
                                         progressIndicatorBuilder: (context,
                                             string, downloadProgress) {
                                           return const Center(
@@ -96,17 +100,16 @@ class _ProductInfoState extends State<ProductInfo> {
               ),
               const Gap(10),
               Text(
-                widget.product.title,
+                widget.product!.title,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const Gap(10),
               Text(
-                "Rs. ${widget.product.price}",
+                "Rs. ${widget.product!.price}",
                 style: Theme.of(context).textTheme.labelMedium,
                 textAlign: TextAlign.start,
               ),
               const Gap(10),
-
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -115,13 +118,17 @@ class _ProductInfoState extends State<ProductInfo> {
                     child: MaterialButton(
                       color: Colors.cyan,
                       onPressed: () {
-                        savedProducts.contains(widget.product)
+                        productsController.savedProducts.contains(widget.product)
                             ? null
-                            : savedProducts.add(widget.product);
-                        setState(() {});
+                            : productsController.savedProducts.add(widget.product!);
+                        setState(() {
+                          for(int i=0;i<productsController.savedProducts.value.length;i++){
+                            log(productsController.savedProducts[i].title);
+                          }
+                        });
                       },
                       child: Text(
-                        savedProducts.contains(widget.product)
+                        productsController.savedProducts.contains(widget.product)
                             ? 'Already in Cart'
                             : 'ADD TO CART',
                         style: Theme.of(context)

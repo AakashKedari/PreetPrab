@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:preetprab/const.dart';
+import 'package:preetprab/controllers/products_controller.dart';
 
   Widget ProfileTab() {
-
+    ProductsController productsController = Get.find<ProductsController>();
     print('Settings Tab Called');
     return SafeArea(
       child: SingleChildScrollView(
@@ -22,7 +24,7 @@ import 'package:preetprab/const.dart';
                 leading: const CircleAvatar(
                   backgroundImage: AssetImage('assets/images/men.png'),
                 ),
-                title: Text(allProducts?.users[0].username ?? '',style: const TextStyle(fontSize: 15),),
+                title: Text(productsController.allShopProductDetails.value?.users[0].username ?? '',style: const TextStyle(fontSize: 15),),
               ),
               ListTile(
                 horizontalTitleGap: 30,
@@ -30,7 +32,7 @@ import 'package:preetprab/const.dart';
                   Icons.email,
                   size: 30,
                 ),
-                title: Text(allProducts?.users[0].email ?? '',style: const TextStyle(fontSize: 15),),
+                title: Text(productsController.allShopProductDetails.value?.users[0].email ?? '',style: const TextStyle(fontSize: 15),),
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
@@ -46,7 +48,7 @@ import 'package:preetprab/const.dart';
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '${savedProducts.length} items',
+                      '${productsController.savedProducts.length} items',
                       style: const TextStyle(color: Colors.cyan),
                     ),
                     const Icon(Icons.keyboard_arrow_right)

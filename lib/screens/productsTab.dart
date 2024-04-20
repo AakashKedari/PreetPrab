@@ -1,77 +1,19 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
-import '../const.dart';
-import '../models/shopProductsDetails.dart';
 
-class FirstTab extends StatefulWidget {
-  const FirstTab({super.key});
+class FirstTab extends StatelessWidget {
+  FirstTab({super.key});
 
-  @override
-  State<FirstTab> createState() => _FirstTabState();
-}
-
-class _FirstTabState extends State<FirstTab>
-    with AutomaticKeepAliveClientMixin<FirstTab> {
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
-
-  String filterName = '';
-
-  Future _productAPICall() async {
-    log('APIMethod');
-    http.Response response = await http.get(Uri.parse(apiUrl));
-    Map<String, dynamic> decoded = jsonDecode(response.body);
-    ShopProductsDetails temp = ShopProductsDetails.fromJson(decoded);
-
-    setState(() {
-      allProducts = temp;
-    });
-  }
-
-  // Function to sort products by price in ascending order
-  void sortProductsByPriceAsc() {
-    List<Product> temp = List.from(allProducts!.products);
-    allProducts!.products
-        .sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
-
-    ascProducts = allProducts!.products;
-    allProducts!.products = temp;
-    setState(() {
-      filterName = 'Price ASC';
-    });
-  }
-
-// Function to sort products by price in descending order
-  void sortProductsByPriceDesc() {
-    List<Product> temp;
-    temp = List.from(allProducts!.products);
-    allProducts!.products
-        .sort((a, b) => double.parse(b.price).compareTo(double.parse(a.price)));
-    dscProducts = allProducts!.products;
-    allProducts!.products = temp;
-    setState(() {
-      filterName = 'Price DSC';
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    if (allProducts == null)
-      WidgetsBinding.instance
-          .addPostFrameCallback((timeStamp) => _productAPICall());
-    super.initState();
-  }
+  ProductsController productsController = Get.find<ProductsController>();
 
   @override
   Widget build(BuildContext context) {
     log("ProductsTab Rebuild");
-    super.build(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 8,
@@ -91,8 +33,8 @@ class _FirstTabState extends State<FirstTab>
             icon: const Icon(Icons.filter_alt_rounded),
             onSelected: (value) {
               value == 'Price ASC'
-                  ? sortProductsByPriceAsc()
-                  : sortProductsByPriceDesc();
+                  ? productsController.sortProductsByPriceAsc()
+                  : productsController.sortProductsByPriceDesc();
             },
             itemBuilder: (BuildContext context) {
               return {'Price ASC', 'Price DESC'}.map((String choice) {
@@ -105,116 +47,220 @@ class _FirstTabState extends State<FirstTab>
           ),
         ],
       ),
-      body: allProducts == null
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                  child: Column(
-                    children: [
-                      if (filterName != '')
-                        Chip(
-                          label: Text(filterName),
-                          onDeleted: () {
-                            setState(() {
-                              filterName = '';
-                            });
-                          },
-                        ),
-                      GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                  childAspectRatio: 0.5),
-                          itemCount: allProducts!.products.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => ProductInfo(
-                                            product: filterName == 'Price ASC'
-                                                ? ascProducts[index]
-                                                : filterName == 'Price DSC'
-                                                    ? dscProducts[index]
-                                                    : allProducts!
-                                                        .products[index])));
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20)),
-                                    child: Stack(
-                                      children: [
-                                        const Positioned.fill(
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child:
-                                                CircularProgressIndicator(), // Add CircularProgressIndicator here
-                                          ),
-                                        ),
-                                        Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.3,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(20)),
-                                            image: DecorationImage(
-                                              image: CachedNetworkImageProvider(
-                                                filterName == 'Price ASC'
-                                                    ? ascProducts[index].image
-                                                    : filterName == 'Price DSC'
-                                                        ? dscProducts[index]
-                                                            .image
-                                                        : allProducts!
-                                                            .products[index]
-                                                            .image,
-                                              ),
-                                              fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            child: Column(
+              children: [
+
+                Obx(() {
+                  if (productsController.allShopProductDetails.value == null && productsController.dscProducts.isEmpty && productsController.ascProducts.isEmpty) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else {
+                    final fetchedProduct = productsController
+                        .allShopProductDetails.value!.products;
+                    return Column(
+                      children: [
+                        if(productsController.filterName.value != '')
+                          Chip(label: Text(productsController.filterName.value)),
+                        GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                childAspectRatio: 0.5),
+                            itemCount: fetchedProduct.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => ProductInfo(
+                                              product: productsController
+                                                  .filterName.value ==
+                                                  'Price ASC'
+                                                  ? productsController
+                                                  .ascProducts[index]
+                                                  : productsController
+                                                  .filterName.value ==
+                                                  'Price DSC'
+                                                  ? productsController
+                                                  .dscProducts[index]
+                                                  : fetchedProduct[index])));
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(20)),
+                                      child: Stack(
+                                        children: [
+                                          const Positioned.fill(
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child:
+                                              CircularProgressIndicator(), // Add CircularProgressIndicator here
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          Container(
+                                            height:
+                                            MediaQuery.of(context).size.height *
+                                                0.3,
+                                            decoration: BoxDecoration(
+                                              borderRadius: const BorderRadius.all(
+                                                  Radius.circular(20)),
+                                              image: DecorationImage(
+                                                image: CachedNetworkImageProvider(
+                                                  productsController
+                                                      .filterName.value ==
+                                                      'Price ASC'
+                                                      ? productsController
+                                                      .ascProducts[index]!.image
+                                                      : productsController
+                                                      .filterName
+                                                      .value ==
+                                                      'Price DSC'
+                                                      ? productsController
+                                                      .dscProducts[index]!
+                                                      .image
+                                                      : fetchedProduct[index]
+                                                      .image,
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      filterName == 'Price ASC'
-                                          ? ascProducts[index].title
-                                          : filterName == 'Price DSC'
-                                              ? dscProducts[index].title
-                                              : allProducts!
-                                                  .products[index].title,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelLarge,
+                                    Flexible(
+                                      child: Text(
+                                        productsController.filterName.value ==
+                                            'Price ASC'
+                                            ? productsController
+                                            .ascProducts[index]!.title
+                                            : productsController.filterName.value ==
+                                            'Price DSC'
+                                            ? productsController
+                                            .dscProducts[index]!.title
+                                            : fetchedProduct[index].title,
+                                        style:
+                                        Theme.of(context).textTheme.labelLarge,
+                                        overflow: TextOverflow.fade,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Rs. ${productsController.filterName.value == 'Price ASC' ? productsController.ascProducts[index]!.price : productsController.filterName.value == 'Price DSC' ? productsController.dscProducts[index]!.price : fetchedProduct[index].price}",
+                                      style: Theme.of(context).textTheme.labelSmall,
                                       overflow: TextOverflow.fade,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Rs. ${filterName == 'Price ASC' ? ascProducts[index].price : filterName == 'Price DSC' ? dscProducts[index].price : allProducts!.products[index].price}",
-                                    style:
-                                        Theme.of(context).textTheme.labelSmall,
-                                    overflow: TextOverflow.fade,
-                                  )
-                                ],
-                              ),
-                            );
-                          }),
-                    ],
-                  )),
-            ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            })
+
+                      ],
+                    );
+                  }
+                })
+                // GridView.builder(
+                //     shrinkWrap: true,
+                //     physics: const NeverScrollableScrollPhysics(),
+                //     gridDelegate:
+                //         const SliverGridDelegateWithFixedCrossAxisCount(
+                //             crossAxisCount: 2,
+                //             crossAxisSpacing: 10,
+                //             mainAxisSpacing: 10,
+                //             childAspectRatio: 0.5),
+                //     itemCount: allProducts!.products.length,
+                //     itemBuilder: (context, index) {
+                //       return GestureDetector(
+                //         onTap: () {
+                //           Navigator.push(
+                //               context,
+                //               MaterialPageRoute(
+                //                   builder: (_) => ProductInfo(
+                //                       product: filterName == 'Price ASC'
+                //                           ? ascProducts[index]
+                //                           : filterName == 'Price DSC'
+                //                               ? dscProducts[index]
+                //                               : allProducts!
+                //                                   .products[index])));
+                //         },
+                //         child: Column(
+                //           crossAxisAlignment: CrossAxisAlignment.start,
+                //           children: [
+                //             ClipRRect(
+                //               borderRadius: const BorderRadius.all(
+                //                   Radius.circular(20)),
+                //               child: Stack(
+                //                 children: [
+                //                   const Positioned.fill(
+                //                     child: Align(
+                //                       alignment: Alignment.center,
+                //                       child:
+                //                           CircularProgressIndicator(), // Add CircularProgressIndicator here
+                //                     ),
+                //                   ),
+                //                   Container(
+                //                     height: MediaQuery.of(context)
+                //                             .size
+                //                             .height *
+                //                         0.3,
+                //                     decoration: BoxDecoration(
+                //                       borderRadius:
+                //                           const BorderRadius.all(
+                //                               Radius.circular(20)),
+                //                       image: DecorationImage(
+                //                         image: CachedNetworkImageProvider(
+                //                           filterName == 'Price ASC'
+                //                               ? ascProducts[index].image
+                //                               : filterName == 'Price DSC'
+                //                                   ? dscProducts[index]
+                //                                       .image
+                //                                   : allProducts!
+                //                                       .products[index]
+                //                                       .image,
+                //                         ),
+                //                         fit: BoxFit.cover,
+                //                       ),
+                //                     ),
+                //                   ),
+                //                 ],
+                //               ),
+                //             ),
+                //             Flexible(
+                //               child: Text(
+                //                 filterName == 'Price ASC'
+                //                     ? ascProducts[index].title
+                //                     : filterName == 'Price DSC'
+                //                         ? dscProducts[index].title
+                //                         : allProducts!
+                //                             .products[index].title,
+                //                 style: Theme.of(context)
+                //                     .textTheme
+                //                     .labelLarge,
+                //                 overflow: TextOverflow.fade,
+                //               ),
+                //             ),
+                //             Text(
+                //               "Rs. ${filterName == 'Price ASC' ? ascProducts[index].price : filterName == 'Price DSC' ? dscProducts[index].price : allProducts!.products[index].price}",
+                //               style:
+                //                   Theme.of(context).textTheme.labelSmall,
+                //               overflow: TextOverflow.fade,
+                //             )
+                //           ],
+                //         ),
+                //       );
+                //     }),
+              ],
+            )),
+      ),
     );
   }
 }

@@ -4,7 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:preetprab/const.dart';
+import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
 import '../models/shopProductsDetails.dart';
 
@@ -15,14 +17,10 @@ class SearchCategory extends StatefulWidget {
 
 class _SearchCategoryState extends State<SearchCategory>
     with AutomaticKeepAliveClientMixin<SearchCategory> {
-  List<bool> _isExpanded = List.generate(4, (index) => false);
+
   ScrollController scrollController = ScrollController();
-  List<String> imagePath = [
-    'assets/images/clothing.png',
-    'assets/images/men.png',
-    'assets/images/women.png',
-    'assets/images/music.png',
-  ];
+
+  ProductsController productsController = Get.find<ProductsController>();
 
   Widget products = ListView(
     physics: const NeverScrollableScrollPhysics(),
@@ -135,8 +133,8 @@ class _SearchCategoryState extends State<SearchCategory>
                                                     ),
                                                     Flexible(
                                                       child: Text(
-                                                        allProducts!
-                                                            .products[index]
+                                                        filteredList
+                                                            [index]
                                                             .title,
                                                         style: Theme.of(context)
                                                             .textTheme
@@ -146,7 +144,7 @@ class _SearchCategoryState extends State<SearchCategory>
                                                       ),
                                                     ),
                                                     Text(
-                                                      "Rs. ${allProducts!.products[index].price}",
+                                                      "Rs. ${filteredList![index].price}",
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .labelSmall,
@@ -158,7 +156,7 @@ class _SearchCategoryState extends State<SearchCategory>
                                                   top: 5,
                                                   right: 5,
                                                   child: IconButton(
-                                                    icon: Icon(savedProducts
+                                                    icon: Icon(productsController.savedProducts
                                                             .contains(
                                                                 filteredList[
                                                                     index])
@@ -166,20 +164,20 @@ class _SearchCategoryState extends State<SearchCategory>
                                                         : Icons
                                                             .favorite_outline_sharp),
                                                     onPressed: () {
-                                                      savedProducts.contains(
+                                                      productsController.savedProducts.contains(
                                                               filteredList[
                                                                   index])
-                                                          ? savedProducts
+                                                          ? productsController.savedProducts
                                                               .remove(
                                                                   filteredList[
                                                                       index])
-                                                          : savedProducts.add(
+                                                          : productsController.savedProducts.add(
                                                               filteredList[
                                                                   index]);
                                                       setState(() {});
                                                     },
                                                     color:
-                                                        savedProducts.contains(
+                                                        productsController.savedProducts.contains(
                                                                 filteredList[
                                                                     index])
                                                             ? Colors.red
@@ -245,7 +243,7 @@ class _SearchCategoryState extends State<SearchCategory>
           filteredList = [];
           setState(() {});
         } else {
-          filteredList = allProducts!.products
+          filteredList = productsController.allShopProductDetails.value!.products
               .where((element) => element.title
                   .toLowerCase()
                   .contains(value.toString().toLowerCase()))
