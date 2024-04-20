@@ -16,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
         type: BottomNavigationBarType.shifting,
         onTap: (index) {
           setState(() {
-            currentIndex = index;
+            currentIndex = index++;
           });
         },
         currentIndex: currentIndex,
@@ -71,52 +70,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
         ],
       ),
-      body: IndexedStack(
+      body:
+      IndexedStack(
         index: currentIndex,
         children: [
-           const FirstTab(),SearchCategory(),const CartTab(),ProfileTab()
+           const FirstTab(),SearchCategory(),  CartTab(), ProfileTab(),
         ],
       )
+      // currentIndex == 0 ? const FirstTab() : currentIndex == 1 ? SearchCategory() : currentIndex == 2 ? CartTab() : ProfileTab()
     );
   }
 }
 
-
-// Widget body2() {
-//   return ;
-  // SizedBox(
-  //   width: double.infinity,
-  //   height: 150,
-  //   child: Image.asset('assets/images/clothing.png'),
-  // ),
-  //  ExpansionPanelList(
-  //   expansionCallback: (int index,bool isExpanded) {
-  //
-  //   },
-  // )
-  // ExpansionPanel(headerBuilder: (BuildContext context,bool isExpanded){
-  //   return SizedBox(
-  //     width: double.infinity,
-  //     height: 150,
-  //     child: Image.asset('assets/images/men.png'),
-  //   ),
-  // }, body: Text('Hii'));
-  // SizedBox(
-  //   width: double.infinity,
-  //   height: 150,
-  //   child: Image.asset('assets/images/men.png'),
-  // ),
-  // SizedBox(
-  //   width: double.infinity,
-  //   height: 150,
-  //   child: Image.asset('assets/images/women.png'),
-  // ), SizedBox(
-  //   width: double.infinity,
-  //   height: 150,
-  //   child: Image.asset('assets/images/music.png'),
-  // ),
-  //     ],
-  //   ),
-  // );
-// }
 

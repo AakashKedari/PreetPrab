@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:preetprab/const.dart';
 
   Widget ProfileTab() {
+
+    print('Settings Tab Called');
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(

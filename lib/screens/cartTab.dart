@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
@@ -12,12 +12,13 @@ class CartTab extends StatefulWidget {
   State<CartTab> createState() => _CartTabState();
 }
 
-class _CartTabState extends State<CartTab> {
+class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin<CartTab>{
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    print('Cart Build Method Called');
     num totalCost =
         savedProducts.fold(0, (sum, item) => sum + int.parse(item.price));
-    log('TOtal cost : $totalCost');
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -150,4 +151,8 @@ class _CartTabState extends State<CartTab> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
