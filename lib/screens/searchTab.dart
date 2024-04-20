@@ -263,10 +263,10 @@ class _SearchCategoryState extends State<SearchCategory>
                   },
                 )
               : null,
-          contentPadding: EdgeInsets.all(10),
+          contentPadding: const EdgeInsets.all(10),
           border: InputBorder.none,
-          prefixIcon: Icon(Icons.search),
-          hintText: 'Search for Kurtis,Lehengas,...'),
+          prefixIcon: const Icon(Icons.search),
+          hintText: 'Search for Kurtis,Lehengas,...',hintStyle: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w100,)),
     );
   }
 

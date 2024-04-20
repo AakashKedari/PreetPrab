@@ -62,7 +62,11 @@ class FirstTab extends StatelessWidget {
                     return Column(
                       children: [
                         if(productsController.filterName.value != '')
-                          Chip(label: Text(productsController.filterName.value)),
+                          Chip(label: Text(productsController.filterName.value),onDeleted: (){
+                            productsController.ascProducts.clear();
+                            productsController.dscProducts.clear();
+                            productsController.filterName.value = '';
+                          },),
                         GridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
@@ -126,7 +130,7 @@ class FirstTab extends StatelessWidget {
                                                       .value ==
                                                       'Price DSC'
                                                       ? productsController
-                                                      .dscProducts[index]!
+                                                      .dscProducts[index]
                                                       .image
                                                       : fetchedProduct[index]
                                                       .image,
@@ -143,11 +147,11 @@ class FirstTab extends StatelessWidget {
                                         productsController.filterName.value ==
                                             'Price ASC'
                                             ? productsController
-                                            .ascProducts[index]!.title
+                                            .ascProducts[index].title
                                             : productsController.filterName.value ==
                                             'Price DSC'
                                             ? productsController
-                                            .dscProducts[index]!.title
+                                            .dscProducts[index].title
                                             : fetchedProduct[index].title,
                                         style:
                                         Theme.of(context).textTheme.labelLarge,
@@ -156,7 +160,7 @@ class FirstTab extends StatelessWidget {
                                     ),
                                     Text(
                                       "Rs. ${productsController.filterName.value == 'Price ASC' ? productsController.ascProducts[index]!.price : productsController.filterName.value == 'Price DSC' ? productsController.dscProducts[index]!.price : fetchedProduct[index].price}",
-                                      style: Theme.of(context).textTheme.labelSmall,
+                                      style: Theme.of(context).textTheme.labelMedium,
                                       overflow: TextOverflow.fade,
                                     )
                                   ],

@@ -17,63 +17,65 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          elevation: 50,
-          type: BottomNavigationBarType.shifting,
-          onTap: (index) {
-            homeScreenController.currentIndex.value = index;
-          },
-          currentIndex: homeScreenController.currentIndex.value,
-          selectedItemColor: Colors.blueAccent,
-          unselectedItemColor: Colors.black,
-          unselectedLabelStyle: const TextStyle(color: Colors.black),
-          items: [
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.home), label: 'Shop'),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.search), label: 'Search'),
-            BottomNavigationBarItem(
-                icon: Obx(
-                  () => Stack(
-                    children: [
-                      const Icon(
-                        Icons.shopping_bag,
-                        size: 30,
-                      ),
-                      if (productsController.savedProducts.isNotEmpty)
-                        Positioned(
-                          // Position the badge on top right of the icon
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            padding: EdgeInsets.all(1),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 12,
-                              minHeight: 12,
-                            ),
-                            child:  Text(
-                                productsController.savedProducts.length
-                                    .toString(), // Replace with the dynamic number of items in the cart
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 8,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-
-                          ),
+        bottomNavigationBar: Obx(
+          () => BottomNavigationBar(
+            elevation: 50,
+            type: BottomNavigationBarType.shifting,
+            onTap: (index) {
+              homeScreenController.currentIndex.value = index;
+            },
+            currentIndex: homeScreenController.currentIndex.value,
+            selectedItemColor: Colors.blueAccent,
+            unselectedItemColor: Colors.black,
+            unselectedLabelStyle: const TextStyle(color: Colors.black),
+            items: [
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.home), label: 'Shop'),
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.search), label: 'Search'),
+              BottomNavigationBarItem(
+                  icon: Obx(
+                    () => Stack(
+                      children: [
+                        const Icon(
+                          Icons.shopping_bag,
+                          size: 30,
                         ),
-                    ],
+                        if (productsController.savedProducts.isNotEmpty)
+                          Positioned(
+                            // Position the badge on top right of the icon
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              padding: EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 12,
+                                minHeight: 12,
+                              ),
+                              child:  Text(
+                                  productsController.savedProducts.length
+                                      .toString(), // Replace with the dynamic number of items in the cart
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-                label: 'Cart'),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.person), label: 'Profile')
-          ],
+                  label: 'Cart'),
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.person), label: 'Profile')
+            ],
+          ),
         ),
         body: Obx(
           () => IndexedStack(
