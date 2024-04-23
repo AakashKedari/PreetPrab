@@ -24,7 +24,7 @@ import 'package:preetprab/controllers/products_controller.dart';
                 leading: const CircleAvatar(
                   backgroundImage: AssetImage('assets/images/men.png'),
                 ),
-                title: Text(productsController.allShopProductDetails.value?.users[0].username ?? '',style: const TextStyle(fontSize: 15),),
+                title: Text(productsController.allShopProductDetails.value?.users![0].username ?? '',style: const TextStyle(fontSize: 15),),
               ),
               ListTile(
                 horizontalTitleGap: 30,
@@ -32,7 +32,7 @@ import 'package:preetprab/controllers/products_controller.dart';
                   Icons.email,
                   size: 30,
                 ),
-                title: Text(productsController.allShopProductDetails.value?.users[0].email ?? '',style: const TextStyle(fontSize: 15),),
+                title: Text(productsController.allShopProductDetails.value?.users![0].email ?? '',style: const TextStyle(fontSize: 15),),
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),

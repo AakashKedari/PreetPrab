@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:preetprab/controllers/products_controller.dart';
+import 'package:preetprab/models/shopProductsDetails.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
 
 class FirstTab extends StatelessWidget {
@@ -57,7 +58,7 @@ class FirstTab extends StatelessWidget {
                   if (productsController.allShopProductDetails.value == null && productsController.dscProducts.isEmpty && productsController.ascProducts.isEmpty) {
                     return const Center(child: CircularProgressIndicator());
                   } else {
-                    final fetchedProduct = productsController
+                    List<Product>? fetchedProduct = productsController
                         .allShopProductDetails.value!.products;
                     return Column(
                       children: [
@@ -76,7 +77,7 @@ class FirstTab extends StatelessWidget {
                                 crossAxisSpacing: 10,
                                 mainAxisSpacing: 10,
                                 childAspectRatio: 0.5),
-                            itemCount: fetchedProduct.length,
+                            itemCount: fetchedProduct?.length,
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () {
@@ -94,7 +95,7 @@ class FirstTab extends StatelessWidget {
                                                   'Price DSC'
                                                   ? productsController
                                                   .dscProducts[index]
-                                                  : fetchedProduct[index])));
+                                                  : fetchedProduct?[index])));
                                 },
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,16 +125,16 @@ class FirstTab extends StatelessWidget {
                                                       .filterName.value ==
                                                       'Price ASC'
                                                       ? productsController
-                                                      .ascProducts[index]!.image
+                                                      .ascProducts[index].images![0]
                                                       : productsController
                                                       .filterName
                                                       .value ==
                                                       'Price DSC'
                                                       ? productsController
                                                       .dscProducts[index]
-                                                      .image
-                                                      : fetchedProduct[index]
-                                                      .image,
+                                                      .images![0]
+                                                      : fetchedProduct![index].images!.isNotEmpty ?
+                                                    fetchedProduct[index].images![0] : 'https://preetprab.com/wp-content/uploads/2024/04/IMG-20240401-WA0107.jpg'
                                                 ),
                                                 fit: BoxFit.cover,
                                               ),
@@ -144,22 +145,25 @@ class FirstTab extends StatelessWidget {
                                     ),
                                     Flexible(
                                       child: Text(
-                                        productsController.filterName.value ==
-                                            'Price ASC'
-                                            ? productsController
-                                            .ascProducts[index].title
-                                            : productsController.filterName.value ==
-                                            'Price DSC'
-                                            ? productsController
-                                            .dscProducts[index].title
-                                            : fetchedProduct[index].title,
-                                        style:
+                                        productsController.filterName.value == 'Price ASC' ? productsController.ascProducts[index].title! :
+                                        productsController.filterName.value == 'Price DSC' ? productsController.dscProducts[index].title! :
+                                            fetchedProduct![index].title!
+                                        // productsController.filterName.value ==
+                                        //     'Price ASC'
+                                        //     ? productsController
+                                        //     .ascProducts[index].title
+                                        //     : productsController.filterName.value ==
+                                        //     'Price DSC'
+                                        //     ? productsController
+                                        //     .dscProducts[index].title
+                                        //     : fetchedProduct[index].title,
+                                        ,style:
                                         Theme.of(context).textTheme.labelLarge,
                                         overflow: TextOverflow.fade,
                                       ),
                                     ),
                                     Text(
-                                      "Rs. ${productsController.filterName.value == 'Price ASC' ? productsController.ascProducts[index]!.price : productsController.filterName.value == 'Price DSC' ? productsController.dscProducts[index]!.price : fetchedProduct[index].price}",
+                                      "Rs. ${productsController.filterName.value == 'Price ASC' ? productsController.ascProducts[index]!.price : productsController.filterName.value == 'Price DSC' ? productsController.dscProducts[index]!.price : fetchedProduct![index].price}",
                                       style: Theme.of(context).textTheme.labelMedium,
                                       overflow: TextOverflow.fade,
                                     )

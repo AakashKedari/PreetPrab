@@ -13,12 +13,13 @@ class ProductsController extends GetxController {
   var savedProducts = <Product>[].obs;
 
   // Function to sort products by price in ascending order
-  void sortProductsByPriceAsc() {
-    List<Product> temp = List.from(allShopProductDetails.value!.products);
-    allShopProductDetails.value!.products
-        .sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
 
-    ascProducts.value = allShopProductDetails.value!.products;
+  void sortProductsByPriceAsc() {
+    List<Product> temp = List.from(allShopProductDetails.value!.products!);
+    allShopProductDetails.value!.products
+        ?.sort((a, b) => double.parse(a.price!).compareTo(double.parse(b.price!)));
+
+    ascProducts.value = allShopProductDetails.value!.products!;
     allShopProductDetails.value!.products = temp;
 
     filterName.value = 'Price ASC';
@@ -26,10 +27,10 @@ class ProductsController extends GetxController {
 // Function to sort products by price in descending order
   void sortProductsByPriceDesc() {
 
-    List<Product> temp = List.from(allShopProductDetails.value!.products);
+    List<Product> temp = List.from(allShopProductDetails.value!.products!);
     allShopProductDetails.value!.products
-        .sort((a, b) => double.parse(b.price).compareTo(double.parse(a.price)));
-    dscProducts.value = allShopProductDetails.value!.products;
+        ?.sort((a, b) => double.parse(b.price!).compareTo(double.parse(a.price!)));
+    dscProducts.value = allShopProductDetails.value!.products!;
     allShopProductDetails.value!.products = temp;
     filterName.value = 'Price DSC';
     update();

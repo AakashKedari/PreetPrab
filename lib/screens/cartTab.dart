@@ -17,10 +17,10 @@ class CartTab extends StatelessWidget {
   Widget build(BuildContext context) {
     print('Cart Build Method Called');
     for(int i=0;i<productsController.savedProducts.length;i++){
-      log(productsController.savedProducts[i].title);
+      log(productsController.savedProducts[i].title!);
     }
     num totalCost =
-        productsController.savedProducts.fold(0, (sum, item) => sum + int.parse(item.price));
+        productsController.savedProducts.fold(0, (sum, item) => sum + int.parse(item.price!));
 
     return Obx(
       () => SafeArea(
@@ -81,11 +81,11 @@ class CartTab extends StatelessWidget {
                               CachedNetworkImage(
                                 height:MediaQuery.of(context).size.height * 0.3,
                                 width: MediaQuery.of(context).size.width * 0.3,
-                                imageUrl: productsController.savedProducts[index].image,
+                                imageUrl: productsController.savedProducts[index].images![0],
                               ),
                               Flexible(
                                   child: Text(
-                                productsController.savedProducts[index].title,
+                                productsController.savedProducts[index].title!,
                                 style: TextStyle(fontSize: 10),
                                 maxLines: 3,
                               ))

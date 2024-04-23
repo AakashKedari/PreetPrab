@@ -118,7 +118,7 @@ class _SearchCategoryState extends State<SearchCategory>
                                                       child: CachedNetworkImage(
                                                         imageUrl:
                                                             filteredList[index]
-                                                                .image,
+                                                                .images![0],
                                                         progressIndicatorBuilder:
                                                             (context, string,
                                                                 downloadProgress) {
@@ -135,7 +135,7 @@ class _SearchCategoryState extends State<SearchCategory>
                                                       child: Text(
                                                         filteredList
                                                             [index]
-                                                            .title,
+                                                            .title!,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .labelLarge,
@@ -244,8 +244,8 @@ class _SearchCategoryState extends State<SearchCategory>
           setState(() {});
         } else {
           filteredList = productsController.allShopProductDetails.value!.products
-              .where((element) => element.title
-                  .toLowerCase()
+              !.where((element) => element.title
+                  !.toLowerCase()
                   .contains(value.toString().toLowerCase()))
               .toList();
           setState(() {});
