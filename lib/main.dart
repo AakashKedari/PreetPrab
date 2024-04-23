@@ -1,10 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:preetprab/controllers/products_controller.dart';
-import 'package:preetprab/screens/home.dart';
+import 'package:preetprab/screens/splash.dart';
 
 class CustomImageCache extends WidgetsFlutterBinding {
   @override
@@ -22,6 +21,8 @@ void main() {
   runApp(const MyApp());
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -29,15 +30,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ProductsController productsController = Get.put(ProductsController());
     return GetMaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,
         ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.brown),
         useMaterial3: true,
       ),
-      home:  HomeScreen(),
+      home:  const SplashScreen(),
     );
   }
 }

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:preetprab/controllers/homescreen_controller.dart';
 
 import 'package:preetprab/screens/productsTab.dart';
-import 'package:preetprab/screens/searchTab.dart';
+import 'package:preetprab/screens/categoryTab.dart';
 import 'package:preetprab/screens/settingsTab.dart';
 import '../controllers/products_controller.dart';
 import 'cartTab.dart';
@@ -11,7 +11,7 @@ import 'cartTab.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  ProductsController productsController = Get.find<ProductsController>();
+  final ProductsController productsController = Get.find<ProductsController>();
   final HomeScreenController homeScreenController = HomeScreenController();
 
   @override
@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
         bottomNavigationBar: Obx(
           () => BottomNavigationBar(
             elevation: 50,
-            type: BottomNavigationBarType.shifting,
+            type: BottomNavigationBarType.fixed,
             onTap: (index) {
               homeScreenController.currentIndex.value = index;
             },
@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
               const BottomNavigationBarItem(
                   icon: Icon(Icons.home), label: 'Shop'),
               const BottomNavigationBarItem(
-                  icon: Icon(Icons.search), label: 'Search'),
+                  icon: Icon(Icons.category), label: 'Category'),
               BottomNavigationBarItem(
                   icon: Obx(
                     () => Stack(
@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
                             top: 0,
                             right: 0,
                             child: Container(
-                              padding: EdgeInsets.all(1),
+                              padding: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
                                 color: Colors.red,
                                 borderRadius: BorderRadius.circular(6),
@@ -82,7 +82,7 @@ class HomeScreen extends StatelessWidget {
             index: homeScreenController.currentIndex.value,
             children: [
               FirstTab(),
-              SearchCategory(),
+              CategoryTab(),
               CartTab(),
               ProfileTab(),
             ],

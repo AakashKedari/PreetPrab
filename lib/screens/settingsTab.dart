@@ -1,11 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:preetprab/const.dart';
 import 'package:preetprab/controllers/products_controller.dart';
 
   Widget ProfileTab() {
     ProductsController productsController = Get.find<ProductsController>();
-    print('Settings Tab Called');
+    log('Settings Tab Called');
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(

@@ -11,11 +11,11 @@ import 'checkout.dart';
 class CartTab extends StatelessWidget {
    CartTab({super.key});
 
-  ProductsController productsController = Get.find<ProductsController>();
+  final ProductsController productsController = Get.find<ProductsController>();
 
   @override
   Widget build(BuildContext context) {
-    print('Cart Build Method Called');
+    log('Cart Build Method Called');
     for(int i=0;i<productsController.savedProducts.length;i++){
       log(productsController.savedProducts[i].title!);
     }
@@ -86,7 +86,7 @@ class CartTab extends StatelessWidget {
                               Flexible(
                                   child: Text(
                                 productsController.savedProducts[index].title!,
-                                style: TextStyle(fontSize: 10),
+                                style: const TextStyle(fontSize: 10),
                                 maxLines: 3,
                               ))
                             ],

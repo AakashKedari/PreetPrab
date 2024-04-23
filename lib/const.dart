@@ -1,4 +1,3 @@
-import '../models/shopProductsDetails.dart';
 
 List<String> cartItems = ['Elephant Print Cami Dress','Ripped Boyfriend Jeans','Red Check Dress'];
 

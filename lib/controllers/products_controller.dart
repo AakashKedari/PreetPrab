@@ -11,9 +11,10 @@ class ProductsController extends GetxController {
   var dscProducts = <Product>[].obs;
   var filterName = ''.obs;
   var savedProducts = <Product>[].obs;
+  var filteredList = <Product>[].obs;
+  var categorisedList = <Product>[].obs;
 
   // Function to sort products by price in ascending order
-
   void sortProductsByPriceAsc() {
     List<Product> temp = List.from(allShopProductDetails.value!.products!);
     allShopProductDetails.value!.products
@@ -22,7 +23,7 @@ class ProductsController extends GetxController {
     ascProducts.value = allShopProductDetails.value!.products!;
     allShopProductDetails.value!.products = temp;
 
-    filterName.value = 'Price ASC';
+    filterName.value = 'Low to High';
   }
 // Function to sort products by price in descending order
   void sortProductsByPriceDesc() {
@@ -32,7 +33,7 @@ class ProductsController extends GetxController {
         ?.sort((a, b) => double.parse(b.price!).compareTo(double.parse(a.price!)));
     dscProducts.value = allShopProductDetails.value!.products!;
     allShopProductDetails.value!.products = temp;
-    filterName.value = 'Price DSC';
+    filterName.value = 'High to Low';
     update();
   }
 
@@ -46,7 +47,6 @@ class ProductsController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     _productAPICall();
   }
