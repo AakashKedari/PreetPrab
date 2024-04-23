@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CheckOut extends StatefulWidget {
@@ -27,7 +28,7 @@ class _CheckOutState extends State<CheckOut> {
               leading: IconButton(
                 icon: const Icon(Icons.keyboard_arrow_left),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Get.back();
                 },
               ),
               bottom: const TabBar(

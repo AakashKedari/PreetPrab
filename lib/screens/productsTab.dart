@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:preetprab/controllers/homescreen_controller.dart';
 import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
@@ -21,6 +23,7 @@ class FirstTab extends StatelessWidget {
   FirstTab({super.key});
 
   final ProductsController productsController = Get.find<ProductsController>();
+  HomeScreenController homeScreenController2 = Get.put(HomeScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -28,54 +31,6 @@ class FirstTab extends StatelessWidget {
 
     final TextEditingController searchTextEditingController =
         TextEditingController();
-
-    TextFormField searchFormField() {
-      return TextFormField(
-        controller: searchTextEditingController,
-        onFieldSubmitted: (value) {
-          if (value.isEmpty) {
-            productsController.filteredList.value = [];
-          } else {
-            productsController.filteredList.value = productsController
-                .allShopProductDetails.value!.products!
-                .where((element) => element.title!
-                    .toLowerCase()
-                    .contains(value.toString().toLowerCase()))
-                .toList();
-            if (productsController.filteredList.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                behavior: SnackBarBehavior.floating,
-                  content: Text('Sorry!!! No such Product found')));
-            }
-          }
-        },
-        decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            suffixIcon: searchTextEditingController.text.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.cancel),
-                    onPressed: () {
-                      searchTextEditingController.clear();
-                      productsController.filteredList.clear();
-                    },
-                  )
-                : null,
-            contentPadding: const EdgeInsets.all(10),
-            border: InputBorder.none,
-            prefixIcon: const Icon(Icons.search),
-            hintText: 'Search for Kurtis,Lehengas...',
-            hintStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w100,
-                )),
-      );
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -105,6 +60,92 @@ class FirstTab extends StatelessWidget {
             },
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: TextFormField(
+                  controller: searchTextEditingController,
+                  onFieldSubmitted: (value) {
+                    if (value.isEmpty) {
+                      productsController.filteredList.value = [];
+                    } else {
+                      productsController.filteredList.value = productsController
+                          .allShopProductDetails.value!.products!
+                          .where((element) => element.title!
+                          .toLowerCase()
+                          .contains(value.toString().toLowerCase()))
+                          .toList();
+                      if (productsController.filteredList.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text('Sorry!!! No such Product found')));
+                      }
+                    }
+                  },
+                  decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      suffixIcon: searchTextEditingController.text.isNotEmpty
+                          ? IconButton(
+                        icon: const Icon(Icons.cancel),
+                        onPressed: () {
+                          searchTextEditingController.clear();
+                          productsController.filteredList.clear();
+                        },
+                      )
+                          : null,
+                      contentPadding: const EdgeInsets.all(10),
+                      border: InputBorder.none,
+                      prefixIcon: const Icon(Icons.search),
+                      label: Row(
+                        children: [
+                          Text('Search for '),
+                          StreamBuilder<String>(
+                            stream: homeScreenController2.hintStreamController.stream,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return AnimatedSwitcher(
+                                  duration: Duration(milliseconds: 500),
+                                  transitionBuilder: (Widget child, Animation<double> animation) {
+                                    return SlideTransition(
+                                      position: Tween<Offset>(
+                                        begin: const Offset(0, 1),
+                                        end: const Offset(0, 0),
+                                      ).animate(animation),
+                                      child: child,
+                                    );
+                                  },
+                                  child: Text(
+                                    snapshot.data!,
+                                    key: ValueKey<String>(snapshot.data!),
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                );
+                              } else {
+                                return Container(); // Placeholder widget
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+
+                      // hintText: 'Search for Kurtis,Lehengas...',
+                      hintStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w100,
+                      )
+                  ),
+                ),
+              ),
+
+
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -131,8 +172,8 @@ class FirstTab extends StatelessWidget {
                             : productsController.filteredList;
                     return Column(
                       children: [
-                        Gap(10),
-                        searchFormField(),
+                        // Gap(10),
+                        // searchFormField(),
                         Gap(10),
                         if (productsController.filterName.value != '')
                           Chip(
@@ -157,10 +198,7 @@ class FirstTab extends StatelessWidget {
                               return Card(
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) => ProductInfo(
+                                    Get.to( () => ProductInfo(
                                                 product: productsController
                                                             .filterName.value ==
                                                         'Low to High'
@@ -173,7 +211,7 @@ class FirstTab extends StatelessWidget {
                                                         ? productsController
                                                             .dscProducts[index]
                                                         : fetchedProduct?[
-                                                            index])));
+                                                            index]) );
                                   },
                                   child: Column(
                                     crossAxisAlignment:
@@ -271,6 +309,9 @@ class FirstTab extends StatelessWidget {
               ],
             )),
       ),
+
     );
+
   }
+
 }

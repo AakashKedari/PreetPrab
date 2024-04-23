@@ -50,7 +50,7 @@ import 'package:preetprab/controllers/products_controller.dart';
                   children: [
                     Text(
                       '${productsController.savedProducts.length} items',
-                      style: const TextStyle(color: Colors.cyan),
+                      style: const TextStyle(color: Colors.brown),
                     ),
                     const Icon(Icons.keyboard_arrow_right)
                   ],

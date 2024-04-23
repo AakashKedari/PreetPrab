@@ -30,8 +30,7 @@ class ProductInfo extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Gap(10),
-                    // ElevatedButton(onPressed: (){Navigator.of(context).pop();}, child: Text("back")),
+
                     Stack(
                       children: [
                         AspectRatio(
@@ -77,7 +76,7 @@ class ProductInfo extends StatelessWidget {
                                                   return Scaffold(
                                                     body: GestureDetector(
                                                       onTap: () {
-                                                        Navigator.pop(context);
+                                                       Get.back();
               
                                                         /// Exit full screen when tapped
                                                       },
