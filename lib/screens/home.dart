@@ -77,7 +77,8 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        body: Obx(
+        body:
+        Obx(
           () => IndexedStack(
             index: homeScreenController.currentIndex.value,
             children: [
@@ -88,7 +89,7 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         )
-        // currentIndex == 0 ?  FirstTab() : currentIndex == 1 ? SearchCategory() : currentIndex == 2 ? CartTab() : ProfileTab()
+        // Obx(() => homeScreenController.currentIndex.value == 0 ?  FirstTab() : homeScreenController.currentIndex.value == 1 ? CategoryTab() : homeScreenController.currentIndex.value == 2 ? CartTab() : ProfileTab()),
         );
   }
 }

@@ -1,5 +1,5 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -11,15 +11,13 @@ class ProductInfo extends StatelessWidget {
   ProductInfo({super.key, required this.product});
 
   final ProductsController productsController = Get.find<ProductsController>();
+  int currentSlidedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: const [
-          Icon(Icons.add_shopping_cart_outlined),
-          Gap(10)
-        ],
+        actions: const [Icon(Icons.add_shopping_cart_outlined), Gap(10)],
       ),
       body: SafeArea(
         child: Stack(
@@ -30,83 +28,158 @@ class ProductInfo extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     Stack(
                       children: [
                         AspectRatio(
                           aspectRatio: 12 / 16,
-                          child: PageView.builder(
-                              pageSnapping: true,
-                              itemCount: product!.images!.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return Stack(
-                                  alignment: AlignmentDirectional.center,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: CachedNetworkImage(
-                                        filterQuality: FilterQuality.high,
-                                        fit: BoxFit.cover,
-                                        imageUrl: product!.images![index],
-                                        progressIndicatorBuilder:
-                                            (context, string, downloadProgress) {
-                                          return const SizedBox(
-                                              height: 200,
-                                              width: 200,
-                                              child: Center(
-                                                  child:
-                                                      CircularProgressIndicator()));
-                                        },
-                                      ),
+                          child: Swiper(
+                            autoplayDelay: 4000,
+                            pagination: const SwiperPagination(),
+                            autoplay: true,
+                            loop: true,
+                            itemCount: product!.images!.length,
+                            itemBuilder: (context, currentSlidedIndex) {
+                              return Stack(
+                                alignment: AlignmentDirectional.center,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: CachedNetworkImage(
+                                      filterQuality: FilterQuality.high,
+                                      fit: BoxFit.cover,
+                                      imageUrl: product!.images![currentSlidedIndex],
+                                      progressIndicatorBuilder:
+                                          (context, string, downloadProgress) {
+                                        return const SizedBox(
+                                            height: 200,
+                                            width: 200,
+                                            child: Center(
+                                                child:
+                                                    CircularProgressIndicator()));
+                                      },
                                     ),
-                                    Positioned(
-                                        top: 10,
-                                        right: 20,
-                                        child: IconButton(
-                                            icon: const Icon(
-                                              Icons.fullscreen,
-                                              size: 30,
-                                              color: Colors.white,
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .push(MaterialPageRoute(
-                                                builder: (BuildContext context) {
-                                                  return Scaffold(
-                                                    body: GestureDetector(
-                                                      onTap: () {
-                                                       Get.back();
-              
-                                                        /// Exit full screen when tapped
-                                                      },
-                                                      child: Center(
-                                                        child: CachedNetworkImage(
-                                                          fit: BoxFit.fill,
-                                                          imageUrl:
-                                                              product!.images![0],
-                                                          progressIndicatorBuilder:
-                                                              (context, string,
-                                                                  downloadProgress) {
-                                                            return const Center(
-                                                                child:
-                                                                    CircularProgressIndicator());
-                                                          },
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              const Icon(
-                                                                  Icons.error),
-                                                        ),
+                                  ),
+                                  Positioned(
+                                      top: 10,
+                                      right: 20,
+                                      child: IconButton(
+                                          icon: const Icon(
+                                            Icons.fullscreen,
+                                            size: 30,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                              builder: (BuildContext context) {
+                                                return Scaffold(
+                                                  body: GestureDetector(
+                                                    onTap: () {
+                                                      Get.back();
+
+                                                      /// Exit full screen when tapped
+                                                    },
+                                                    child: Center(
+                                                      child: CachedNetworkImage(
+                                                        fit: BoxFit.fill,
+                                                        imageUrl:
+                                                            product!.images![currentSlidedIndex],
+                                                        progressIndicatorBuilder:
+                                                            (context, string,
+                                                                downloadProgress) {
+                                                          return const Center(
+                                                              child:
+                                                                  CircularProgressIndicator());
+                                                        },
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            const Icon(
+                                                                Icons.error),
                                                       ),
                                                     ),
-                                                  );
-                                                },
-                                                fullscreenDialog: true,
-                                              ));
-                                            })),
-                                  ],
-                                );
-                              }),
+                                                  ),
+                                                );
+                                              },
+                                              fullscreenDialog: true,
+                                            ));
+                                          })),
+                                ],
+                              );
+                            },
+                          )
+                          // PageView.builder(
+                          //     pageSnapping: true,
+                          //     itemCount: product!.images!.length,
+                          //     scrollDirection: Axis.horizontal,
+                          //     itemBuilder: (context, index) {
+                          //       return Stack(
+                          //         alignment: AlignmentDirectional.center,
+                          //         children: [
+                          //           ClipRRect(
+                          //             borderRadius: BorderRadius.circular(20),
+                          //             child: CachedNetworkImage(
+                          //               filterQuality: FilterQuality.high,
+                          //               fit: BoxFit.cover,
+                          //               imageUrl: product!.images![index],
+                          //               progressIndicatorBuilder:
+                          //                   (context, string, downloadProgress) {
+                          //                 return const SizedBox(
+                          //                     height: 200,
+                          //                     width: 200,
+                          //                     child: Center(
+                          //                         child:
+                          //                             CircularProgressIndicator()));
+                          //               },
+                          //             ),
+                          //           ),
+                          //           Positioned(
+                          //               top: 10,
+                          //               right: 20,
+                          //               child: IconButton(
+                          //                   icon: const Icon(
+                          //                     Icons.fullscreen,
+                          //                     size: 30,
+                          //                     color: Colors.white,
+                          //                   ),
+                          //                   onPressed: () {
+                          //                     Navigator.of(context)
+                          //                         .push(MaterialPageRoute(
+                          //                       builder: (BuildContext context) {
+                          //                         return Scaffold(
+                          //                           body: GestureDetector(
+                          //                             onTap: () {
+                          //                              Get.back();
+                          //
+                          //                               /// Exit full screen when tapped
+                          //                             },
+                          //                             child: Center(
+                          //                               child: CachedNetworkImage(
+                          //                                 fit: BoxFit.fill,
+                          //                                 imageUrl:
+                          //                                     product!.images![0],
+                          //                                 progressIndicatorBuilder:
+                          //                                     (context, string,
+                          //                                         downloadProgress) {
+                          //                                   return const Center(
+                          //                                       child:
+                          //                                           CircularProgressIndicator());
+                          //                                 },
+                          //                                 errorWidget: (context,
+                          //                                         url, error) =>
+                          //                                     const Icon(
+                          //                                         Icons.error),
+                          //                               ),
+                          //                             ),
+                          //                           ),
+                          //                         );
+                          //                       },
+                          //                       fullscreenDialog: true,
+                          //                     ));
+                          //                   })),
+                          //         ],
+                          //       );
+                          //     })
+                          ,
                         ),
                       ],
                     ),
@@ -119,10 +192,13 @@ class ProductInfo extends StatelessWidget {
                           children: [
                             Text(
                               product!.title!,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.black,
-                                  decorationThickness: 2.0),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Colors.black,
+                                      decorationThickness: 2.0),
                             ),
                             const Gap(10),
                             Text(
@@ -136,7 +212,8 @@ class ProductInfo extends StatelessWidget {
                             const Gap(5),
                             const Text(
                               'Inclusive of All Taxes',
-                              style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w100, fontSize: 12),
                             ),
                           ],
                         ),
@@ -148,13 +225,17 @@ class ProductInfo extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Column(
                           children: [
-                            const Text('Description : ',style: TextStyle(fontWeight: FontWeight.bold),),
+                            const Text(
+                              'Description : ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             const Divider(),
                             Text(product!.shortDescription!)
                           ],
                         ),
                       ),
-                    ),const Gap(50)
+                    ),
+                    const Gap(50)
                   ],
                 ),
               ),
@@ -173,7 +254,7 @@ class ProductInfo extends StatelessWidget {
                         : productsController.savedProducts.add(product!);
                   },
                   child: Obx(
-                        () => Row(
+                    () => Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(Icons.add_shopping_cart_outlined),
@@ -193,7 +274,6 @@ class ProductInfo extends StatelessWidget {
               ),
             ),
           ],
-
         ),
       ),
     );

@@ -88,74 +88,27 @@ class CategoryTab extends StatelessWidget {
                             fetchCategoryWiseProducts(
                                 CategoryEnum.values[index]);
                           },
-                          child: SizedBox(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                  Colors.brown.shade300,
+                                  Colors.brown.shade500
+                                ])),
                             height: 80,
-                            child: Card(
-                              color: Colors.brown.shade400,
-                              child: ListTile(
-                                title: Text(
-                                  CategoryEnum.values[index].name,
-                                  style: const TextStyle(color: Colors.white),
-                                ),
+                            child: ListTile(
+                              title: Text(
+                                CategoryEnum.values[index].name,
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
                         )
                       ],
                     );
-                  })
-              // ListView(
-              //   physics: const NeverScrollableScrollPhysics(),
-              //   shrinkWrap: true,
-              //   children: [
-              //     const Gap(10),
-              //     InkWell(
-              //       onTap: (){
-              //         productsController.categorisedList.value = productsController.allShopProductDetails.value!.products
-              //             !.where((product) {
-              //               log(product.categories.toString());
-              //             return product.categories!.contains(CategoryEnum.KURTIS);
-              //             }
-              //         ).toList();
-              //         double position = 1* 100;
-              //         scrollController.animateTo(
-              //           position,duration: const Duration(milliseconds: 300), curve: Curves.easeOut,
-              //         );
-              //       },
-              //       child: SizedBox(
-              //         height: 80,
-              //         child: Card(
-              //           color: Colors.brown.shade200,
-              //           child: const ListTile(
-              //             title: Text('Kurtis',style: TextStyle(color: Colors.white),),
-              //           ),
-              //         ),
-              //       ),
-              //     ),const Gap(10),
-              //     SizedBox(
-              //       height: 80,
-              //       child: Card(
-              //         color: Colors.brown.shade300,
-              //         child: const ListTile(title: Text('Gown',style: TextStyle(color: Colors.white),),),
-              //       ),
-              //     ),const Gap(10),
-              //     SizedBox(
-              //       height: 80,
-              //       child: Card(
-              //         color: Colors.brown.shade100,
-              //         child: const ListTile(title: Text('Short Dresses',style: TextStyle(color: Colors.white),),),
-              //       ),
-              //     ),const Gap(10),
-              //     SizedBox(
-              //       height: 80,
-              //       child: Card(
-              //         color: Colors.brown.shade400,
-              //         child: const ListTile(title: Text('Long Dresses',style: TextStyle(color: Colors.white),)),
-              //       ),
-              //     )
-              //   ],
-              // ),
-              ,
+                  }),
               Obx(() => GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),

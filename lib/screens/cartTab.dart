@@ -37,26 +37,13 @@ class CartTab extends StatelessWidget {
                     'CART',
                     style: Theme.of(context)
                         .textTheme
-                        .headlineMedium
+                        .headlineSmall
                         ?.copyWith(color: Colors.black),
                   ),
-                  trailing: InkWell(
-                    onTap: () {
-                     Get.to(() => const CheckOut()) ;
-                    },
-                    child: Material(
-                      elevation: 5,
-                      child: Container(
-                        height: 50,
-                        width: 100,
-                        color: Colors.cyan,
-                        child: const Center(
-                            child: Text(
-                          'CHECKOUT',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        )),
-                      ),
-                    ),
+                  trailing: MaterialButton(
+                    color: Colors.brown.shade700,
+                    onPressed: (){    Get.to(() => const CheckOut()) ;},
+                    child: const Text('CHECKOUT',style: TextStyle(color: Colors.white),),
                   )),
               ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
@@ -149,7 +136,7 @@ class CartTab extends StatelessWidget {
                         Text('Products : ',
                             style: Theme.of(context)
                                 .textTheme
-                                .headlineSmall
+                                .titleMedium
                                 ?.copyWith(
                                   fontWeight: FontWeight.w100,
                                   color: Colors.grey,
@@ -158,7 +145,7 @@ class CartTab extends StatelessWidget {
                           productsController.savedProducts.length.toString(),
                           style: Theme.of(context)
                               .textTheme
-                              .headlineSmall
+                              .titleMedium
                               ?.copyWith(
                                 fontWeight: FontWeight.w100,
                                 color: Colors.grey,
@@ -173,7 +160,7 @@ class CartTab extends StatelessWidget {
                           'Total : ',
                           style: Theme.of(context)
                               .textTheme
-                              .headlineSmall
+                              .titleMedium
                               ?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -182,7 +169,7 @@ class CartTab extends StatelessWidget {
                           'Rs. ${totalCost.toString()}',
                           style: Theme.of(context)
                               .textTheme
-                              .headlineSmall
+                              .titleMedium
                               ?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),

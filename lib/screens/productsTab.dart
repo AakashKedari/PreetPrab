@@ -1,6 +1,7 @@
-import 'dart:async';
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:card_swiper/card_swiper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -9,28 +10,22 @@ import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
 
-enum CategoryEnum {
-  CLOTHING,
-  DRESSES,
-  GOWN,
-  KURTIS,
-  LONG_DRESSES,
-  SHORT_DRESSES,
-  WOMAN
-}
-
 class FirstTab extends StatelessWidget {
   FirstTab({super.key});
 
   final ProductsController productsController = Get.find<ProductsController>();
-  HomeScreenController homeScreenController2 = Get.put(HomeScreenController());
+
+  ScrollController _scrollController = ScrollController();
+
+  TextEditingController searchTextEditingController = TextEditingController();
+
+  final HomeScreenController homeScreenController2 =
+      Get.put(HomeScreenController());
 
   @override
   Widget build(BuildContext context) {
     log("ProductsTab Rebuild");
-
-    final TextEditingController searchTextEditingController =
-        TextEditingController();
+    log('TextField Value : ${searchTextEditingController.value.text}');
 
     return Scaffold(
       appBar: AppBar(
@@ -42,19 +37,29 @@ class FirstTab extends StatelessWidget {
           width: 120,
         ),
         actions: [
-         const Icon(Icons.notifications),
+          const Icon(Icons.notifications),
           PopupMenuButton<String>(
             icon: const Icon(Icons.filter_alt_rounded),
             onSelected: (value) {
               value == 'Low to High'
                   ? productsController.sortProductsByPriceAsc()
                   : productsController.sortProductsByPriceDesc();
+              _scrollController.animateTo(0.0,
+                  duration: const Duration(seconds: 1), curve: Curves.easeOut);
             },
             itemBuilder: (BuildContext context) {
               return {'High to Low', 'Low to High'}.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
-                  child: Text(choice),
+                  child: Row(
+                    children: [
+                      Icon(choice == "Low to High"
+                          ? Icons.moving_outlined
+                          : Icons.trending_down),
+                      Gap(5),
+                      Text(choice),
+                    ],
+                  ),
                 );
               }).toList();
             },
@@ -63,91 +68,118 @@ class FirstTab extends StatelessWidget {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: TextFormField(
-                  controller: searchTextEditingController,
-                  onFieldSubmitted: (value) {
-                    if (value.isEmpty) {
-                      productsController.filteredList.value = [];
-                    } else {
-                      productsController.filteredList.value = productsController
-                          .allShopProductDetails.value!.products!
-                          .where((element) => element.title!
-                          .toLowerCase()
-                          .contains(value.toString().toLowerCase()))
-                          .toList();
-                      if (productsController.filteredList.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            behavior: SnackBarBehavior.floating,
-                            content: Text('Sorry!!! No such Product found')));
-                      }
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: TextFormField(
+                controller:
+                    searchTextEditingController,
+                onFieldSubmitted: (value) {
+                  productsController.filterName.value = '';
+                  if (value.isEmpty) {
+                    productsController.filteredList.value = [];
+                  } else {
+                    productsController.filteredList.value = productsController
+                        .allShopProductDetails.value!.products!
+                        .where((element) => element.title!
+                            .toLowerCase()
+                            .contains(value.toString().toLowerCase()))
+                        .toList();
+                    if (productsController.filteredList.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content: Text('Sorry!!! No such Product found')));
                     }
-                  },
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      suffixIcon: searchTextEditingController.text.isNotEmpty
-                          ? IconButton(
-                        icon: const Icon(Icons.cancel),
-                        onPressed: () {
-                          searchTextEditingController.clear();
-                          productsController.filteredList.clear();
-                        },
-                      )
-                          : null,
-                      contentPadding: const EdgeInsets.all(10),
-                      border: InputBorder.none,
-                      prefixIcon: const Icon(Icons.search),
-                      label: Row(
-                        children: [
-                          Text('Search for '),
-                          StreamBuilder<String>(
-                            stream: homeScreenController2.hintStreamController.stream,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return AnimatedSwitcher(
-                                  duration: Duration(milliseconds: 500),
-                                  transitionBuilder: (Widget child, Animation<double> animation) {
-                                    return SlideTransition(
-                                      position: Tween<Offset>(
-                                        begin: const Offset(0, 1),
-                                        end: const Offset(0, 0),
-                                      ).animate(animation),
-                                      child: child,
-                                    );
-                                  },
-                                  child: Text(
-                                    snapshot.data!,
-                                    key: ValueKey<String>(snapshot.data!),
-                                    style: const TextStyle(color: Colors.grey),
-                                  ),
-                                );
-                              } else {
-                                return Container(); // Placeholder widget
-                              }
+                  }
+                  log('TextField Value : ${searchTextEditingController.value.text}');
+                },
+                decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: Colors.brown, width: 2.0),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: Colors.brown, width: 2.0),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    suffixIcon: IconButton(
+                            icon: const Icon(Icons.cancel),
+                            onPressed: () {
+                           searchTextEditingController
+                                  .clear();
+                              productsController.filteredList.clear();
                             },
                           ),
-                        ],
+
+                    contentPadding: const EdgeInsets.all(10),
+                    border: InputBorder.none,
+                    prefixIcon: const Icon(Icons.search),
+                    label: Center(
+                      child: StreamBuilder<String>(
+                        stream:
+                            homeScreenController2.hintStreamController.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 500),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0, 1),
+                                    end: const Offset(0, 0),
+                                  ).animate(animation),
+                                  child: child,
+                                );
+                              },
+                              child: Text(
+                                snapshot.data!,
+                                key: ValueKey<String>(snapshot.data!),
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            );
+                          } else {
+                            return Container(); // Placeholder widget
+                          }
+                        },
                       ),
+                    )
 
-                      // hintText: 'Search for Kurtis,Lehengas...',
-                      hintStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w100,
-                      )
-                  ),
-                ),
-              ),
-
-
+                    // homeScreenController2.searchTextEditingController.value.text.isEmpty ?
+                    //     Center(
+                    //       child: StreamBuilder<String>(
+                    //         stream: homeScreenController2.hintStreamController.stream,
+                    //         builder: (context, snapshot) {
+                    //           if (snapshot.hasData) {
+                    //             return AnimatedSwitcher(
+                    //               duration: const Duration(milliseconds: 500),
+                    //               transitionBuilder: (Widget child, Animation<double> animation) {
+                    //                 return SlideTransition(
+                    //                   position: Tween<Offset>(
+                    //                     begin: const Offset(0, 1),
+                    //                     end: const Offset(0, 0),
+                    //                   ).animate(animation),
+                    //                   child: child,
+                    //                 );
+                    //               },
+                    //               child: Text(
+                    //                 snapshot.data!,
+                    //                 key: ValueKey<String>(snapshot.data!),
+                    //                 style: const TextStyle(color: Colors.grey),
+                    //               ),
+                    //             ) ;
+                    //           } else {
+                    //             return Container(); // Placeholder widget
+                    //           }
+                    //         },
+                    //       ),
+                    //     ) : null,
+                    )),
+          ),
         ),
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
             child: Column(
@@ -171,10 +203,47 @@ class FirstTab extends StatelessWidget {
                                 .allShopProductDetails.value!.products
                             : productsController.filteredList;
                     return Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Gap(10),
-                        // searchFormField(),
-                        Gap(10),
+                        const Gap(10),
+                        SizedBox(
+                          height: 200,
+                          width: double.infinity,
+                          child: Swiper(
+                            physics: const NeverScrollableScrollPhysics(),
+                            autoplay: true,
+                            loop: true,
+                            itemCount: 3,
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  SizedBox(
+                                    height: 300,
+                                    width: double.infinity,
+                                    child: Image.asset(
+                                      'assets/images/${index + 1}.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  const Positioned(
+                                      left: 20,
+                                      top: 50,
+                                      child: Column(
+                                    children: [
+                                      Text("NEW FASHION"),
+                                      Gap(10),
+                                      Material(
+
+                                        type: MaterialType.button,
+                                        color: Colors.pink,child: Text('SHOP NOW',style: TextStyle(color: Colors.white,fontSize: 12),),)
+                                    ],
+                                  ))
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                        const Gap(10),
                         if (productsController.filterName.value != '')
                           Chip(
                             label: Text(productsController.filterName.value),
@@ -195,27 +264,40 @@ class FirstTab extends StatelessWidget {
                                     childAspectRatio: 0.5),
                             itemCount: fetchedProduct?.length,
                             itemBuilder: (context, index) {
+                              final List<Product> gridProducts =
+                                  productsController.filterName.value ==
+                                          'Low to High'
+                                      ? productsController.ascProducts
+                                      : productsController.filterName.value ==
+                                              'High to Low'
+                                          ? productsController.dscProducts
+                                          : fetchedProduct!;
+
                               return Card(
                                 child: GestureDetector(
                                   onTap: () {
-                                    Get.to( () => ProductInfo(
-                                                product: productsController
-                                                            .filterName.value ==
-                                                        'Low to High'
-                                                    ? productsController
-                                                        .ascProducts[index]
-                                                    : productsController
-                                                                .filterName
-                                                                .value ==
-                                                            'High to Low'
-                                                        ? productsController
-                                                            .dscProducts[index]
-                                                        : fetchedProduct?[
-                                                            index]) );
+                                    Get.to(() =>
+                                        ProductInfo(product: gridProducts[index]
+                                            // product: productsController
+                                            //             .filterName.value ==
+                                            //         'Low to High'
+                                            //     ? productsController
+                                            //         .ascProducts[index]
+                                            //     : productsController
+                                            //                 .filterName
+                                            //                 .value ==
+                                            //             'High to Low'
+                                            //         ? productsController
+                                            //             .dscProducts[index]
+                                            //         : fetchedProduct?[
+                                            //             index]
+                                            ));
                                   },
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       ClipRRect(
                                         borderRadius: const BorderRadius.all(
@@ -240,30 +322,37 @@ class FirstTab extends StatelessWidget {
                                                         Radius.circular(20)),
                                                 image: DecorationImage(
                                                   image: CachedNetworkImageProvider(
-                                                      productsController
-                                                                  .filterName
-                                                                  .value ==
-                                                              'Low to High'
-                                                          ? productsController
-                                                              .ascProducts[
-                                                                  index]
+                                                      gridProducts[index]
+                                                              .images!
+                                                              .isNotEmpty
+                                                          ? gridProducts[index]
                                                               .images![0]
-                                                          : productsController
-                                                                      .filterName
-                                                                      .value ==
-                                                                  'High to Low'
-                                                              ? productsController
-                                                                  .dscProducts[
-                                                                      index]
-                                                                  .images![0]
-                                                              : fetchedProduct![
-                                                                          index]
-                                                                      .images!
-                                                                      .isNotEmpty
-                                                                  ? fetchedProduct[
-                                                                          index]
-                                                                      .images![0]
-                                                                  : 'https://preetprab.com/wp-content/uploads/2024/04/IMG-20240401-WA0107.jpg'),
+                                                          : 'https://preetprab.com/wp-content/uploads/2024/04/IMG-20240401-WA0107.jpg')
+                                                  // productsController
+                                                  //             .filterName
+                                                  //             .value ==
+                                                  //         'Low to High'
+                                                  //     ? productsController
+                                                  //         .ascProducts[
+                                                  //             index]
+                                                  //         .images![0]
+                                                  //     : productsController
+                                                  //                 .filterName
+                                                  //                 .value ==
+                                                  //             'High to Low'
+                                                  //         ? productsController
+                                                  //             .dscProducts[
+                                                  //                 index]
+                                                  //             .images![0]
+                                                  //         : fetchedProduct![
+                                                  //                     index]
+                                                  //                 .images!
+                                                  //                 .isNotEmpty
+                                                  //             ? fetchedProduct[
+                                                  //                     index]
+                                                  //                 .images![0]
+                                                  //             : 'https://preetprab.com/wp-content/uploads/2024/04/IMG-20240401-WA0107.jpg'),
+                                                  ,
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -273,29 +362,64 @@ class FirstTab extends StatelessWidget {
                                       ),
                                       Flexible(
                                         child: Text(
-                                          productsController.filterName.value ==
-                                                  'Low to High'
-                                              ? productsController
-                                                  .ascProducts[index].title!
-                                              : productsController
-                                                          .filterName.value ==
-                                                      'High to Low'
-                                                  ? productsController
-                                                      .dscProducts[index].title!
-                                                  : fetchedProduct![index]
-                                                      .title!,
+                                          gridProducts[index].title!
+                                          // productsController.filterName.value ==
+                                          //         'Low to High'
+                                          //     ? productsController
+                                          //         .ascProducts[index].title!
+                                          //     : productsController
+                                          //                 .filterName.value ==
+                                          //             'High to Low'
+                                          //         ? productsController
+                                          //             .dscProducts[index].title!
+                                          //         : fetchedProduct![index]
+                                          //             .title!,
+                                          ,
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelLarge,
-                                          overflow: TextOverflow.fade,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                       Text(
-                                        "Rs. ${productsController.filterName.value == 'Low to High' ? productsController.ascProducts[index].price : productsController.filterName.value == 'High to Low' ? productsController.dscProducts[index].price : fetchedProduct![index].price}",
+                                        "\u20B9 ${productsController.filterName.value == 'Low to High' ? productsController.ascProducts[index].price : productsController.filterName.value == 'High to Low' ? productsController.dscProducts[index].price : fetchedProduct![index].price}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .labelMedium,
                                         overflow: TextOverflow.fade,
+                                      ),
+                                      Center(
+                                        child: InkWell(
+                                          onTap: () {
+                                            !productsController.savedProducts
+                                                    .contains(
+                                                        gridProducts[index])
+                                                ? productsController
+                                                    .savedProducts
+                                                    .add(gridProducts[index])
+                                                : null;
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.brown,
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            height: 25,
+                                            width: 100,
+                                            child: Center(
+                                              child: Text(
+                                                productsController.savedProducts
+                                                        .contains(
+                                                            gridProducts[index])
+                                                    ? 'In Cart'
+                                                    : 'Add to Cart',
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       )
                                     ],
                                   ),
@@ -309,9 +433,6 @@ class FirstTab extends StatelessWidget {
               ],
             )),
       ),
-
     );
-
   }
-
 }
