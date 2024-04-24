@@ -8,7 +8,7 @@ import 'package:preetprab/models/shopProductsDetails.dart';
 
 class ProductInfo extends StatelessWidget {
   final Product? product;
-  ProductInfo({super.key, required this.product});
+   ProductInfo({super.key, required this.product});
 
   final ProductsController productsController = Get.find<ProductsController>();
   int currentSlidedIndex = 0;
@@ -17,6 +17,11 @@ class ProductInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 8,
+       title: Image.asset(
+        'assets/images/transparent.png',
+        width: 120,
+      ),
         actions: const [Icon(Icons.add_shopping_cart_outlined), Gap(10)],
       ),
       body: SafeArea(
@@ -106,80 +111,7 @@ class ProductInfo extends StatelessWidget {
                                 ],
                               );
                             },
-                          )
-                          // PageView.builder(
-                          //     pageSnapping: true,
-                          //     itemCount: product!.images!.length,
-                          //     scrollDirection: Axis.horizontal,
-                          //     itemBuilder: (context, index) {
-                          //       return Stack(
-                          //         alignment: AlignmentDirectional.center,
-                          //         children: [
-                          //           ClipRRect(
-                          //             borderRadius: BorderRadius.circular(20),
-                          //             child: CachedNetworkImage(
-                          //               filterQuality: FilterQuality.high,
-                          //               fit: BoxFit.cover,
-                          //               imageUrl: product!.images![index],
-                          //               progressIndicatorBuilder:
-                          //                   (context, string, downloadProgress) {
-                          //                 return const SizedBox(
-                          //                     height: 200,
-                          //                     width: 200,
-                          //                     child: Center(
-                          //                         child:
-                          //                             CircularProgressIndicator()));
-                          //               },
-                          //             ),
-                          //           ),
-                          //           Positioned(
-                          //               top: 10,
-                          //               right: 20,
-                          //               child: IconButton(
-                          //                   icon: const Icon(
-                          //                     Icons.fullscreen,
-                          //                     size: 30,
-                          //                     color: Colors.white,
-                          //                   ),
-                          //                   onPressed: () {
-                          //                     Navigator.of(context)
-                          //                         .push(MaterialPageRoute(
-                          //                       builder: (BuildContext context) {
-                          //                         return Scaffold(
-                          //                           body: GestureDetector(
-                          //                             onTap: () {
-                          //                              Get.back();
-                          //
-                          //                               /// Exit full screen when tapped
-                          //                             },
-                          //                             child: Center(
-                          //                               child: CachedNetworkImage(
-                          //                                 fit: BoxFit.fill,
-                          //                                 imageUrl:
-                          //                                     product!.images![0],
-                          //                                 progressIndicatorBuilder:
-                          //                                     (context, string,
-                          //                                         downloadProgress) {
-                          //                                   return const Center(
-                          //                                       child:
-                          //                                           CircularProgressIndicator());
-                          //                                 },
-                          //                                 errorWidget: (context,
-                          //                                         url, error) =>
-                          //                                     const Icon(
-                          //                                         Icons.error),
-                          //                               ),
-                          //                             ),
-                          //                           ),
-                          //                         );
-                          //                       },
-                          //                       fullscreenDialog: true,
-                          //                     ));
-                          //                   })),
-                          //         ],
-                          //       );
-                          //     })
-                          ,
+                          ),
                         ),
                       ],
                     ),

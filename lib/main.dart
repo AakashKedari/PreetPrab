@@ -17,11 +17,12 @@ class CustomImageCache extends WidgetsFlutterBinding {
 }
 
 void main() {
+  CustomImageCache();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  CustomImageCache();
+
   runApp(const MyApp());
 }
 

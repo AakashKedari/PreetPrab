@@ -15,7 +15,7 @@ class FirstTab extends StatelessWidget {
 
   final ProductsController productsController = Get.find<ProductsController>();
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   TextEditingController searchTextEditingController = TextEditingController();
 
@@ -56,7 +56,7 @@ class FirstTab extends StatelessWidget {
                       Icon(choice == "Low to High"
                           ? Icons.moving_outlined
                           : Icons.trending_down),
-                      Gap(5),
+                      const Gap(5),
                       Text(choice),
                     ],
                   ),
@@ -69,112 +69,7 @@ class FirstTab extends StatelessWidget {
           preferredSize: const Size.fromHeight(50),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: TextFormField(
-                controller:
-                    searchTextEditingController,
-                onFieldSubmitted: (value) {
-                  productsController.filterName.value = '';
-                  if (value.isEmpty) {
-                    productsController.filteredList.value = [];
-                  } else {
-                    productsController.filteredList.value = productsController
-                        .allShopProductDetails.value!.products!
-                        .where((element) => element.title!
-                            .toLowerCase()
-                            .contains(value.toString().toLowerCase()))
-                        .toList();
-                    if (productsController.filteredList.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content: Text('Sorry!!! No such Product found')));
-                    }
-                  }
-                  log('TextField Value : ${searchTextEditingController.value.text}');
-                },
-                decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.brown, width: 2.0),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.brown, width: 2.0),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    suffixIcon: IconButton(
-                            icon: const Icon(Icons.cancel),
-                            onPressed: () {
-                           searchTextEditingController
-                                  .clear();
-                              productsController.filteredList.clear();
-                            },
-                          ),
-
-                    contentPadding: const EdgeInsets.all(10),
-                    border: InputBorder.none,
-                    prefixIcon: const Icon(Icons.search),
-                    label: Center(
-                      child: StreamBuilder<String>(
-                        stream:
-                            homeScreenController2.hintStreamController.stream,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 500),
-                              transitionBuilder:
-                                  (Widget child, Animation<double> animation) {
-                                return SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: const Offset(0, 1),
-                                    end: const Offset(0, 0),
-                                  ).animate(animation),
-                                  child: child,
-                                );
-                              },
-                              child: Text(
-                                snapshot.data!,
-                                key: ValueKey<String>(snapshot.data!),
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                            );
-                          } else {
-                            return Container(); // Placeholder widget
-                          }
-                        },
-                      ),
-                    )
-
-                    // homeScreenController2.searchTextEditingController.value.text.isEmpty ?
-                    //     Center(
-                    //       child: StreamBuilder<String>(
-                    //         stream: homeScreenController2.hintStreamController.stream,
-                    //         builder: (context, snapshot) {
-                    //           if (snapshot.hasData) {
-                    //             return AnimatedSwitcher(
-                    //               duration: const Duration(milliseconds: 500),
-                    //               transitionBuilder: (Widget child, Animation<double> animation) {
-                    //                 return SlideTransition(
-                    //                   position: Tween<Offset>(
-                    //                     begin: const Offset(0, 1),
-                    //                     end: const Offset(0, 0),
-                    //                   ).animate(animation),
-                    //                   child: child,
-                    //                 );
-                    //               },
-                    //               child: Text(
-                    //                 snapshot.data!,
-                    //                 key: ValueKey<String>(snapshot.data!),
-                    //                 style: const TextStyle(color: Colors.grey),
-                    //               ),
-                    //             ) ;
-                    //           } else {
-                    //             return Container(); // Placeholder widget
-                    //           }
-                    //         },
-                    //       ),
-                    //     ) : null,
-                    )),
+            child: searchField(context),
           ),
         ),
       ),
@@ -229,15 +124,21 @@ class FirstTab extends StatelessWidget {
                                       left: 20,
                                       top: 50,
                                       child: Column(
-                                    children: [
-                                      Text("NEW FASHION"),
-                                      Gap(10),
-                                      Material(
-
-                                        type: MaterialType.button,
-                                        color: Colors.pink,child: Text('SHOP NOW',style: TextStyle(color: Colors.white,fontSize: 12),),)
-                                    ],
-                                  ))
+                                        children: [
+                                          Text("NEW FASHION"),
+                                          Gap(10),
+                                          Material(
+                                            type: MaterialType.button,
+                                            color: Colors.pink,
+                                            child: Text(
+                                              'SHOP NOW',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12),
+                                            ),
+                                          )
+                                        ],
+                                      ))
                                 ],
                               );
                             },
@@ -273,25 +174,15 @@ class FirstTab extends StatelessWidget {
                                           ? productsController.dscProducts
                                           : fetchedProduct!;
 
+                              /// Here the fetchedProduct will be the list of
+                              /// Original API fetched Products or Filtered
+                              /// Products that we search for
+
                               return Card(
                                 child: GestureDetector(
                                   onTap: () {
-                                    Get.to(() =>
-                                        ProductInfo(product: gridProducts[index]
-                                            // product: productsController
-                                            //             .filterName.value ==
-                                            //         'Low to High'
-                                            //     ? productsController
-                                            //         .ascProducts[index]
-                                            //     : productsController
-                                            //                 .filterName
-                                            //                 .value ==
-                                            //             'High to Low'
-                                            //         ? productsController
-                                            //             .dscProducts[index]
-                                            //         : fetchedProduct?[
-                                            //             index]
-                                            ));
+                                    Get.to(() => ProductInfo(
+                                        product: gridProducts[index]));
                                   },
                                   child: Column(
                                     crossAxisAlignment:
@@ -327,32 +218,7 @@ class FirstTab extends StatelessWidget {
                                                               .isNotEmpty
                                                           ? gridProducts[index]
                                                               .images![0]
-                                                          : 'https://preetprab.com/wp-content/uploads/2024/04/IMG-20240401-WA0107.jpg')
-                                                  // productsController
-                                                  //             .filterName
-                                                  //             .value ==
-                                                  //         'Low to High'
-                                                  //     ? productsController
-                                                  //         .ascProducts[
-                                                  //             index]
-                                                  //         .images![0]
-                                                  //     : productsController
-                                                  //                 .filterName
-                                                  //                 .value ==
-                                                  //             'High to Low'
-                                                  //         ? productsController
-                                                  //             .dscProducts[
-                                                  //                 index]
-                                                  //             .images![0]
-                                                  //         : fetchedProduct![
-                                                  //                     index]
-                                                  //                 .images!
-                                                  //                 .isNotEmpty
-                                                  //             ? fetchedProduct[
-                                                  //                     index]
-                                                  //                 .images![0]
-                                                  //             : 'https://preetprab.com/wp-content/uploads/2024/04/IMG-20240401-WA0107.jpg'),
-                                                  ,
+                                                          : 'https://preetprab.com/wp-content/uploads/2024/04/IMG-20240401-WA0107.jpg'), /// Incase the images array from API is empty
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -362,19 +228,7 @@ class FirstTab extends StatelessWidget {
                                       ),
                                       Flexible(
                                         child: Text(
-                                          gridProducts[index].title!
-                                          // productsController.filterName.value ==
-                                          //         'Low to High'
-                                          //     ? productsController
-                                          //         .ascProducts[index].title!
-                                          //     : productsController
-                                          //                 .filterName.value ==
-                                          //             'High to Low'
-                                          //         ? productsController
-                                          //             .dscProducts[index].title!
-                                          //         : fetchedProduct![index]
-                                          //             .title!,
-                                          ,
+                                          gridProducts[index].title!,
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelLarge,
@@ -434,5 +288,77 @@ class FirstTab extends StatelessWidget {
             )),
       ),
     );
+  }
+
+  TextFormField searchField(BuildContext context) {
+    return TextFormField(
+        controller: searchTextEditingController,
+        onFieldSubmitted: (value) {
+          productsController.filterName.value = '';
+          if (value.isEmpty) {
+            productsController.filteredList.value = [];
+          } else {
+            productsController.filteredList.value = productsController
+                .allShopProductDetails.value!.products!
+                .where((element) => element.title!
+                    .toLowerCase()
+                    .contains(value.toString().toLowerCase()))
+                .toList();
+            if (productsController.filteredList.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  content: Text('Sorry!!! No such Product found')));
+            }
+          }
+          log('TextField Value : ${searchTextEditingController.value.text}');
+        },
+        decoration: InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.cancel),
+              onPressed: () {
+                searchTextEditingController.clear();
+                productsController.filteredList.clear();
+              },
+            ),
+            contentPadding: const EdgeInsets.all(10),
+            border: InputBorder.none,
+            prefixIcon: const Icon(Icons.search),
+            label: Center(
+              child: StreamBuilder<String>(
+                stream: homeScreenController2.hintStreamController.stream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      transitionBuilder:
+                          (Widget child, Animation<double> animation) {
+                        return SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0, 1),
+                            end: const Offset(0, 0),
+                          ).animate(animation),
+                          child: child,
+                        );
+                      },
+                      child: Text(
+                        snapshot.data!,
+                        key: ValueKey<String>(snapshot.data!),
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    );
+                  } else {
+                    return Container(); // Placeholder widget
+                  }
+                },
+              ),
+            )));
   }
 }

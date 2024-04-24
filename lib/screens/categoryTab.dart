@@ -181,20 +181,7 @@ class CategoryTab extends StatelessWidget {
                           ),
                         );
                       })
-                  // ListView.builder(
-                  // physics: const NeverScrollableScrollPhysics(),
-                  // shrinkWrap: true,
-                  // itemCount: productsController.categorisedList.length,
-                  // itemBuilder: (context, index) {
-                  //   final categoryProduct = productsController.categorisedList[index];
-                  //   return InkWell(
-                  //     child: ListTile(
-                  //       title: CachedNetworkImage(imageUrl: categoryProduct.images![0],
-                  //
-                  //       ),
-                  //     ),
-                  //   );
-                  // }),
+
                   )
             ],
           ),
