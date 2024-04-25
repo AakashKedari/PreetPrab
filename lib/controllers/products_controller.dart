@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:preetprab/const.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
 import 'package:http/http.dart' as http;
-import '../const.dart';
-import '../main.dart';
+
 
 class ProductsController extends GetxController {
   var allShopProductDetails = Rx<ShopProductsDetails?>(null);
@@ -18,11 +17,11 @@ class ProductsController extends GetxController {
 
   // Function to sort products by price in ascending order
   void sortProductsByPriceAsc() {
-    List<Product> temp = List.from(allShopProductDetails.value!.products!);
+    List<Product> temp = List.from(allShopProductDetails.value!.products);
     allShopProductDetails.value!.products
-        ?.sort((a, b) => double.parse(a.price!).compareTo(double.parse(b.price!)));
+        .sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
 
-    ascProducts.value = allShopProductDetails.value!.products!;
+    ascProducts.value = allShopProductDetails.value!.products;
     allShopProductDetails.value!.products = temp;
 
     filterName.value = 'Low to High';
@@ -30,10 +29,10 @@ class ProductsController extends GetxController {
 // Function to sort products by price in descending order
   void sortProductsByPriceDesc() {
 
-    List<Product> temp = List.from(allShopProductDetails.value!.products!);
+    List<Product> temp = List.from(allShopProductDetails.value!.products);
     allShopProductDetails.value!.products
-        ?.sort((a, b) => double.parse(b.price!).compareTo(double.parse(a.price!)));
-    dscProducts.value = allShopProductDetails.value!.products!;
+        .sort((a, b) => double.parse(b.price).compareTo(double.parse(a.price)));
+    dscProducts.value = allShopProductDetails.value!.products;
     allShopProductDetails.value!.products = temp;
     filterName.value = 'High to Low';
     update();
@@ -41,7 +40,7 @@ class ProductsController extends GetxController {
 
   Future _productAPICall() async {
     log('APIMethod');
-    http.Response response = await http.get(Uri.parse(apiUrl));
+    http.Response response = await http.get(Uri.parse(APIUrls.allProducts));
     Map<String, dynamic> decoded = jsonDecode(response.body);
     ShopProductsDetails temp = ShopProductsDetails.fromJson(decoded);
     allShopProductDetails.value = temp;
@@ -49,10 +48,10 @@ class ProductsController extends GetxController {
 
   void fetchCategoryWiseProducts(CategoryEnum categoryEnum) {
    categorisedList.value =
-        allShopProductDetails.value!.products!
+        allShopProductDetails.value!.products
         .where((product) {
       log(product.categories.toString());
-      return product.categories!.contains(categoryEnum);
+      return product.categories.contains(categoryEnum);
     }).toList();
 
   }

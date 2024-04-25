@@ -4,7 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:preetprab/controllers/products_controller.dart';
+import 'package:preetprab/screens/home.dart';
+import 'package:preetprab/screens/loginScreen.dart';
+import 'package:preetprab/screens/registerScreen.dart';
 import 'package:preetprab/screens/splash.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomImageCache extends WidgetsFlutterBinding {
   @override
@@ -16,20 +20,22 @@ class CustomImageCache extends WidgetsFlutterBinding {
   }
 }
 
-void main() {
+Future<void> main() async {
   CustomImageCache();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
-  runApp(const MyApp());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool loggedIn = prefs.getBool('isLoggedIn') ?? false;
+  runApp( MyApp());
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+
+  const MyApp({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +47,10 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,
         ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.brown),
+        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      home:  const SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }

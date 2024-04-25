@@ -19,7 +19,9 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
         bottomNavigationBar: Obx(
           () => BottomNavigationBar(
-            elevation: 50,
+            backgroundColor: Colors.white,
+
+            elevation: 0,
             type: BottomNavigationBarType.fixed,
             onTap: (index) {
               homeScreenController.currentIndex.value = index;

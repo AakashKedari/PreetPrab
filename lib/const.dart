@@ -1,8 +1,10 @@
+abstract class APIUrls{
+  static String allProducts =  'https://preetprab.com/wp-json/custom/v1/data';
 
-List<String> cartItems = ['Elephant Print Cami Dress','Ripped Boyfriend Jeans','Red Check Dress'];
+  static String registerUser = 'https://preetprab.com/wp-json/custom/v1/user-registration';
 
-List <int> cartPrices = [30,40,50];
+  static String authenticateUser = 'https://preetprab.com/wp-json/custom/v1/user-login';
+}
 
-const String apiUrl = 'https://preetprab.com/wp-json/custom/v1/data';
 
 

@@ -28,8 +28,10 @@ class FirstTab extends StatelessWidget {
     log('TextField Value : ${searchTextEditingController.value.text}');
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.white,
         elevation: 8,
         centerTitle: false,
         title: Image.asset(
@@ -163,7 +165,7 @@ class FirstTab extends StatelessWidget {
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 10,
                                     childAspectRatio: 0.5),
-                            itemCount: fetchedProduct?.length,
+                            itemCount: fetchedProduct.length,
                             itemBuilder: (context, index) {
                               final List<Product> gridProducts =
                                   productsController.filterName.value ==
@@ -179,6 +181,9 @@ class FirstTab extends StatelessWidget {
                               /// Products that we search for
 
                               return Card(
+                                surfaceTintColor: Colors.white,
+                                color: Colors.white,
+                                shadowColor: Colors.white,
                                 child: GestureDetector(
                                   onTap: () {
                                     Get.to(() => ProductInfo(
@@ -227,20 +232,26 @@ class FirstTab extends StatelessWidget {
                                         ),
                                       ),
                                       Flexible(
-                                        child: Text(
-                                          gridProducts[index].title!,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelLarge,
-                                          overflow: TextOverflow.ellipsis,
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(5,0,2,0),
+                                          child: Text(
+                                            gridProducts[index].title,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ),
-                                      Text(
-                                        "\u20B9 ${productsController.filterName.value == 'Low to High' ? productsController.ascProducts[index].price : productsController.filterName.value == 'High to Low' ? productsController.dscProducts[index].price : fetchedProduct![index].price}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium,
-                                        overflow: TextOverflow.fade,
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(8,0,2,0),
+                                        child: Text(
+                                          "\u20B9 ${productsController.filterName.value == 'Low to High' ? productsController.ascProducts[index].price : productsController.filterName.value == 'High to Low' ? productsController.dscProducts[index].price : fetchedProduct![index].price}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium,
+                                          overflow: TextOverflow.fade,
+                                        ),
                                       ),
                                       Center(
                                         child: InkWell(
@@ -342,7 +353,7 @@ class FirstTab extends StatelessWidget {
                           (Widget child, Animation<double> animation) {
                         return SlideTransition(
                           position: Tween<Offset>(
-                            begin: const Offset(0, 1),
+                            begin: const Offset(0, -1),
                             end: const Offset(0, 0),
                           ).animate(animation),
                           child: child,
