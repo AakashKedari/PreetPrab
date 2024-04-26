@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/screens/loginScreen.dart';
+import 'package:preetprab/utils/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Widget ProfileTab() {
@@ -27,9 +28,9 @@ Widget ProfileTab() {
             leading: const CircleAvatar(
               backgroundImage: AssetImage('assets/images/men.png'),
             ),
-            title: Text(
-              productsController
-                      .allShopProductDetails.value?.users![0].username ??
+            title: Text( AuthService.currentUser ??
+              // productsController
+                      // .allShopProductDetails.value?.users[0].username ??
                   '',
               style: const TextStyle(fontSize: 15),
             ),
@@ -40,8 +41,8 @@ Widget ProfileTab() {
               Icons.email,
               size: 30,
             ),
-            title: Text(
-              productsController.allShopProductDetails.value?.users![0].email ??
+            title: Text( AuthService.currentUserEmail ??
+              // productsController.allShopProductDetails.value?.users[0].email ??
                   '',
               style: const TextStyle(fontSize: 15),
             ),

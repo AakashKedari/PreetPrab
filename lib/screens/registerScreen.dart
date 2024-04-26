@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -34,55 +33,16 @@ class RegisterPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextFormField(
+            SizedBox(
+              height: 50,
+              child: TextFormField(
 
-              controller: usernameController,
-              decoration: InputDecoration(
-                filled: true,fillColor: Colors.brown.shade50,
-                prefixIcon: const Icon(Icons.perm_identity),
-                hintText: 'Username',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-              ),
-            ),
-            const Gap(10),
-            TextFormField(
-              controller: emailController,
-              decoration: InputDecoration(
-                filled: true,fillColor: Colors.brown.shade50,
-                prefixIcon: const Icon(Icons.email),
-                hintText: 'Email',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-              ),
-            ),
-            const Gap(10),
-            Obx(
-              () => TextFormField(
-                obscureText: signController.obscure.value,
-                controller: passwordController,
+                controller: usernameController,
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.zero,
                   filled: true,fillColor: Colors.brown.shade50,
-                  prefixIcon: const Icon(Icons.password),
-                  suffixIcon: IconButton(
-                    onPressed: (){
-                      signController.obscure.value = !signController.obscure.value;
-                    },
-                    icon: signController.obscure.value ? const Icon( Icons.visibility) : const Icon(Icons.visibility_off),
-                  ),
-                  hintText: 'Password',
+                  prefixIcon: const Icon(Icons.perm_identity),
+                  hintText: 'Username',
                   enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Colors.brown, width: 2.0),
                     borderRadius: BorderRadius.circular(50),
@@ -95,9 +55,62 @@ class RegisterPage extends StatelessWidget {
               ),
             ),
             const Gap(10),
-            Center(child: Obx(() {
+            SizedBox(
+              height: 50,
+              child: TextFormField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.zero,
+                  filled: true,fillColor: Colors.brown.shade50,
+                  prefixIcon: const Icon(Icons.email),
+                  hintText: 'Email',
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+              ),
+            ),
+            const Gap(10),
+            Obx(
+              () => SizedBox(
+                height: 50,
+                child: TextFormField(
+                  obscureText: signController.obscure.value,
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.zero,
+                    filled: true,fillColor: Colors.brown.shade50,
+                    prefixIcon: const Icon(Icons.password),
+                    suffixIcon: IconButton(
+                      onPressed: (){
+                        signController.obscure.value = !signController.obscure.value;
+                      },
+                      icon: signController.obscure.value ? const Icon( Icons.visibility) : const Icon(Icons.visibility_off),
+                    ),
+                    hintText: 'Password',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const Gap(10),
+            Obx(() {
               return !signController.isLoading.value
                   ? MaterialButton(
+                minWidth: double.infinity,
+                shape: StadiumBorder(),
                       color: Colors.brown,
                       onPressed: () async {
                         signController.isLoading.value = true;
@@ -121,8 +134,8 @@ class RegisterPage extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                       ),
                     )
-                  : const CircularProgressIndicator();
-            })),
+                  : const CircularProgressIndicator(color: Colors.brown,);
+            }),
             const Gap(5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

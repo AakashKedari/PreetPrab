@@ -16,7 +16,6 @@ class HomeScreenController extends GetxController {
 
   RxString currentHint = CategoryEnum.values[0].name.obs;
 
-
    Rx<Widget?> label = null.obs;
 
   @override

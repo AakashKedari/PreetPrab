@@ -2,12 +2,14 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/painting.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:preetprab/controllers/homescreen_controller.dart';
 import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
+import 'package:preetprab/screens/categoryTab.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
 
 class FirstTab extends StatelessWidget {
@@ -92,8 +94,23 @@ class FirstTab extends StatelessWidget {
                             AppBar().preferredSize.height -
                             kBottomNavigationBarHeight,
                         child:
-                            const Center(child: CircularProgressIndicator()));
-                  } else {
+                            const Center(child: CircularProgressIndicator(color: Colors.brown,)));
+                  }
+                  else if(productsController.allShopProductDetails.value!.users.isEmpty){
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Center(child: Text('Check Connectivity & try again')),
+                        MaterialButton(
+                          color:Colors.brown,
+                          onPressed: (){
+                          productsController.productAPICall();
+                        },child: const Text('Retry',style: TextStyle(color: Colors.white),),)
+                      ],
+                    );
+                  }
+                  else {
                     List<Product>? fetchedProduct =
                         productsController.filteredList.isEmpty
                             ? productsController
@@ -102,6 +119,25 @@ class FirstTab extends StatelessWidget {
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        const Gap(10),
+                        SizedBox(
+                          height: 60,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            scrollDirection: Axis.horizontal,
+                              itemCount:  7 ,
+                              itemBuilder: (context,index){
+                            return GestureDetector(
+                              onTap: (){
+                                Get.to(()=> CategoryTab());
+                              },
+                              child: const CircleAvatar(
+                              radius: 40,
+                              ),
+                            );
+                          }),
+                        ),
                         const Gap(10),
                         SizedBox(
                           height: 200,
@@ -130,13 +166,17 @@ class FirstTab extends StatelessWidget {
                                           Text("NEW FASHION"),
                                           Gap(10),
                                           Material(
+                                            shape: RoundedRectangleBorder(),
                                             type: MaterialType.button,
                                             color: Colors.pink,
-                                            child: Text(
-                                              'SHOP NOW',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(2.0),
+                                              child: Text(
+                                                'SHOP NOW',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12),
+                                              ),
                                             ),
                                           )
                                         ],
@@ -200,13 +240,13 @@ class FirstTab extends StatelessWidget {
                                             Radius.circular(20)),
                                         child: Stack(
                                           children: [
-                                            const Positioned.fill(
-                                              child: Align(
-                                                alignment: Alignment.center,
-                                                child:
-                                                    CircularProgressIndicator(), // Add CircularProgressIndicator here
-                                              ),
-                                            ),
+                                            // const Positioned.fill(
+                                            //   child: Align(
+                                            //     alignment: Alignment.center,
+                                            //     child:
+                                            //         CircularProgressIndicator(), // Add CircularProgressIndicator here
+                                            //   ),
+                                            // ),
                                             Container(
                                               height: MediaQuery.of(context)
                                                       .size
@@ -276,8 +316,8 @@ class FirstTab extends StatelessWidget {
                                                 productsController.savedProducts
                                                         .contains(
                                                             gridProducts[index])
-                                                    ? 'In Cart'
-                                                    : 'Add to Cart',
+                                                    ? 'In Bag'
+                                                    : 'Add to Bag',
                                                 style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 12),

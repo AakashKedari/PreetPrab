@@ -16,6 +16,29 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Show modal bottom sheet as soon as the screen builds
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return SizedBox(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 0.4,
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.wallet_giftcard,color: Colors.deepPurpleAccent,size: 150,),
+                Center(
+                  child: Text('Welcome to Preet & Prab'),
+                ),
+                Text('A Surprise awaits you')
+              ],
+            ),
+          );
+        },
+      );
+    });
+
     return Scaffold(
         bottomNavigationBar: Obx(
           () => BottomNavigationBar(

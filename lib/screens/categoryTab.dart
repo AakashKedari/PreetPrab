@@ -10,6 +10,7 @@ import 'indiProductInfo.dart';
 
 class CategoryTab extends StatelessWidget {
   final ScrollController scrollController = ScrollController();
+  final GlobalKey _imageKey = GlobalKey();
 
   final ProductsController productsController = Get.find<ProductsController>();
 
@@ -17,26 +18,26 @@ class CategoryTab extends StatelessWidget {
 
   void fetchCategoryWiseProducts(CategoryEnum categoryEnum) {
     productsController.categorisedList.value = productsController
-        .allShopProductDetails.value!.products!
+        .allShopProductDetails.value!.products
         .where((product) {
-      log(product.categories.toString());
-      return product.categories!.contains(categoryEnum);
+      return product.categories.contains(categoryEnum);
     }).toList();
-    double position = MediaQuery.of(navigatorKey.currentContext!).size.height -
-        AppBar().preferredSize.height -
-        25;
-    scrollController.animateTo(
-      position,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeOut,
-    );
+
+    final context = _imageKey.currentContext;
+
+    /// Below code is to automatically scroll to the categorised products
+    Future.delayed(const Duration(milliseconds: 300)).then((value) =>
+        Scrollable.ensureVisible(context!,
+            duration: const Duration(seconds: 1)));
   }
 
   @override
   Widget build(BuildContext context) {
-    log(' Catgory Tab Built');
+    log('Category Tab Built');
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         backgroundColor: const Color(0xFFFFFFFF),
         elevation: 8,
         centerTitle: false,
@@ -109,80 +110,75 @@ class CategoryTab extends StatelessWidget {
                       ],
                     );
                   }),
+              const Gap(10),
               Obx(() => GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                              childAspectRatio: 0.5),
-                      itemCount: productsController.categorisedList.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          child: GestureDetector(
-                            onTap: () {
-                              Get.to(() => ProductInfo(
-                                  product: productsController
-                                      .categorisedList[index]));
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(20)),
-                                  child: Stack(
-                                    children: [
-                                      const Positioned.fill(
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child:
-                                              CircularProgressIndicator(), // Add CircularProgressIndicator here
+                  key: _imageKey,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 0.5),
+                  itemCount: productsController.categorisedList.isNotEmpty
+                      ? productsController.categorisedList.length
+                      : 0,
+                  itemBuilder: (context, index) {
+                    return productsController.categorisedList.isNotEmpty
+                        ? Card(
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.to(() => ProductInfo(
+                                    product: productsController
+                                        .categorisedList[index]));
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(20)),
+                                    child: Container(
+                                      height: MediaQuery.of(context)
+                                              .size
+                                              .height *
+                                          0.3,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            const BorderRadius.all(
+                                                Radius.circular(20)),
+                                        image: DecorationImage(
+                                          image: CachedNetworkImageProvider(
+                                              productsController
+                                                  .categorisedList[index]
+                                                  .images[0]),
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.3,
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(20)),
-                                          image: DecorationImage(
-                                            image: CachedNetworkImageProvider(
-                                                productsController
-                                                    .categorisedList[index]
-                                                    .images![0]),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    productsController
-                                        .categorisedList[index].title!,
+                                  Flexible(
+                                    child: Text(
+                                      productsController
+                                          .categorisedList[index].title,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge,
+                                      overflow: TextOverflow.fade,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Rs. ${productsController.categorisedList[index].price}",
                                     style:
-                                        Theme.of(context).textTheme.labelLarge,
+                                        Theme.of(context).textTheme.labelMedium,
                                     overflow: TextOverflow.fade,
-                                  ),
-                                ),
-                                Text(
-                                  "Rs. ${productsController.categorisedList[index].price}",
-                                  style:
-                                      Theme.of(context).textTheme.labelMedium,
-                                  overflow: TextOverflow.fade,
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      })
-
-                  )
+                          )
+                        : const SizedBox();
+                  }))
             ],
           ),
         ),

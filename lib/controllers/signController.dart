@@ -5,4 +5,5 @@ class SignController extends GetxController{
   RxBool isLoading = false.obs;
 
   RxBool obscure = true.obs;
+
 }

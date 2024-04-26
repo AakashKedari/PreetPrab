@@ -14,6 +14,7 @@ class ProductsController extends GetxController {
   var savedProducts = <Product>[].obs;
   var filteredList = <Product>[].obs;
   var categorisedList = <Product>[].obs;
+  var selectedSizeIndex = (-1).obs;
 
   // Function to sort products by price in ascending order
   void sortProductsByPriceAsc() {
@@ -38,12 +39,17 @@ class ProductsController extends GetxController {
     update();
   }
 
-  Future _productAPICall() async {
+  Future productAPICall() async {
     log('APIMethod');
-    http.Response response = await http.get(Uri.parse(APIUrls.allProducts));
-    Map<String, dynamic> decoded = jsonDecode(response.body);
-    ShopProductsDetails temp = ShopProductsDetails.fromJson(decoded);
-    allShopProductDetails.value = temp;
+    try {
+      http.Response response = await http.get(Uri.parse(APIUrls.allProducts));
+      Map<String, dynamic> decoded = jsonDecode(response.body);
+      ShopProductsDetails temp = ShopProductsDetails.fromJson(decoded);
+      allShopProductDetails.value = temp;
+    }
+    catch(e){
+      allShopProductDetails.value = ShopProductsDetails(products: [], categories: [], users: []);
+    }
   }
 
   void fetchCategoryWiseProducts(CategoryEnum categoryEnum) {
@@ -59,6 +65,6 @@ class ProductsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _productAPICall();
+    productAPICall();
   }
 }

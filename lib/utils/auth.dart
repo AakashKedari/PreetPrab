@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 class AuthService{
 
   static String? currentUser;
-  static String? userEmail;
+  static String? currentUserEmail;
 
   Future<bool> authenticate(String username,String password) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -25,12 +25,28 @@ class AuthService{
    Map<String, dynamic> jsonData = jsonDecode(response.body);
     if(jsonData['success'] == true){
       prefs.setBool('isLoggedIn', true);
+      currentUser = jsonData['user_nicename'];
+      currentUserEmail = jsonData['user_email'];
+      return true;
     }
     else{
-      Get.showSnackbar(GetSnackBar(message: jsonData['message'],duration: Duration(seconds: 3),));
+      String error = jsonData['code'];
+      if(error.contains('incorrect_password')){
+        error = 'Incorrect Password!!! Try Again';
+      }
+      else if(error.contains('invalid_email')){
+        error = 'Invalid Email!!! Re-check';
+      }
+      else{
+        error = 'Some Error Occurred!!! Try Again';
+      }
+      Get.showSnackbar(GetSnackBar(message: error,duration: const Duration(seconds: 3),));
+      return false;
     }
-   return jsonData['success'];
+
  }catch(e){
+   Get.showSnackbar(const GetSnackBar(message: 'Check Internet Connectivity',duration: Duration(seconds: 2),));
+
    return false;
  }
   }

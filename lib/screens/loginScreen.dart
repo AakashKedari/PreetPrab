@@ -32,55 +32,68 @@ class LoginPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextFormField(
-
-              controller: usernameController,
-              decoration: InputDecoration(
-                filled: true,fillColor: Colors.brown.shade50,
-                prefixIcon: const Icon(Icons.email),
-                hintText: 'Username or Email',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                  borderRadius: BorderRadius.circular(50),
+            SizedBox(
+              height: 50,
+              child: Center(
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center, // Centers the text vertically
+                  controller: usernameController,
+                  decoration: InputDecoration(
+                    filled: true,fillColor: Colors.brown.shade50,
+                    prefixIcon: const Icon(Icons.email),
+                    hintText: 'Username or Email',
+                    hintTextDirection: TextDirection.ltr,
+                    contentPadding: EdgeInsets.zero,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
                 ),
               ),
             ),
             const Gap(10),
             Obx(
-              ()=> TextFormField(
+              ()=> SizedBox(
+                height: 50,
+                child: TextFormField(
 
-                controller: passwordController,
-                obscureText: signController.obscure.value,
-                decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                      onPressed: (){
-                        signController.obscure.value = !signController.obscure.value;
-                      },
-                      icon: signController.obscure.value ? const Icon( Icons.visibility) : const Icon(Icons.visibility_off),
+                  controller: passwordController,
+                  obscureText: signController.obscure.value,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.zero,
+                    suffixIcon: IconButton(
+                        onPressed: (){
+                          signController.obscure.value = !signController.obscure.value;
+                        },
+                        icon: signController.obscure.value ? const Icon( Icons.visibility) : const Icon(Icons.visibility_off),
+                      ),
+
+                    filled: true,fillColor: Colors.brown.shade50,
+                    prefixIcon: const Icon(Icons.password),
+                    hintText: 'Password',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                      borderRadius: BorderRadius.circular(50),
                     ),
-
-                  filled: true,fillColor: Colors.brown.shade50,
-                  prefixIcon: const Icon(Icons.password),
-                  hintText: 'Password',
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                    borderRadius: BorderRadius.circular(50),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
                   ),
                 ),
               ),
             ),
             const Gap(10),
-            Center(child: Obx(() {
+            Obx(() {
               return !signController.isLoading.value
                   ? MaterialButton(
+                  shape: const StadiumBorder(),
+                  minWidth: double.infinity,
                       color: Colors.brown,
                       onPressed: () async {
                         signController.isLoading.value = true;
@@ -96,8 +109,8 @@ class LoginPage extends StatelessWidget {
                         'Login',
                         style: TextStyle(color: Colors.white),
                       ))
-                  : const CircularProgressIndicator();
-            })),
+                  : const CircularProgressIndicator(color: Colors.brown,);
+            }),
             const Gap(5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

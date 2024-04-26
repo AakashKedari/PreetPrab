@@ -41,7 +41,7 @@ class CartTab extends StatelessWidget {
                         ?.copyWith(color: Colors.black),
                   ),
                   trailing: MaterialButton(
-                    color: Colors.brown.shade700,
+                    color: Colors.black,
                     onPressed: (){    Get.to(() => const CheckOut()) ;},
                     child: const Text('CHECKOUT',style: TextStyle(color: Colors.white),),
                   )),
@@ -185,7 +185,7 @@ class CartTab extends StatelessWidget {
                       },
                       child: Container(
                         height: 40,
-                        color: Colors.black,
+                        color: Colors.brown,
                         child: const Center(
                             child: Text(
                           'CLEAR CART',
