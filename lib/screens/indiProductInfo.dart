@@ -1,11 +1,13 @@
+import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:preetprab/const.dart';
+import 'package:preetprab/controllers/productInfoController.dart';
 import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
 
@@ -15,9 +17,19 @@ class ProductInfo extends StatelessWidget {
 
   final ProductsController productsController = Get.find<ProductsController>();
   int currentSlidedIndex = 0;
+  final ProductInfoController _productInfoController =
+      Get.put(ProductInfoController());
 
   @override
   Widget build(BuildContext context) {
+    final List<String?>? uniqueColors = product?.variations
+        .map((variation) => variation.attributes.attributeColor)
+        .toSet()
+        .toList();
+    for (int i = 0; i < uniqueColors!.length; i++) {
+      log('$i th color is : ${uniqueColors[i]}');
+      log('The length of color is ${uniqueColors.length}');
+    }
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -30,6 +42,7 @@ class ProductInfo extends StatelessWidget {
       ),
       body: SafeArea(
         child: Stack(
+          alignment: Alignment.center,
           children: [
             SingleChildScrollView(
               child: Padding(
@@ -42,7 +55,9 @@ class ProductInfo extends StatelessWidget {
                         AspectRatio(
                           aspectRatio: 12 / 16,
                           child: Swiper(
-                            allowImplicitScrolling: true, ///Setting it to true ensures that the images are preloaded
+                            allowImplicitScrolling: true,
+
+                            ///Setting it to true ensures that the images are preloaded
                             onTap: (index) {
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (BuildContext context) {
@@ -60,7 +75,7 @@ class ProductInfo extends StatelessWidget {
                                         child: Center(
                                           child: CachedNetworkImage(
                                             fit: BoxFit.cover,
-                                            imageUrl: product!.images![index],
+                                            imageUrl: product!.images[index],
                                             progressIndicatorBuilder: (context,
                                                 string, downloadProgress) {
                                               return const Center(
@@ -128,7 +143,7 @@ class ProductInfo extends StatelessWidget {
                       color: Colors.white,
                       elevation: 2,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -138,8 +153,8 @@ class ProductInfo extends StatelessWidget {
                               children: [
                                 Flexible(
                                   child: Obx(
-                                   () => Text(
-                                      "${product!.title} ${productsController.selectedSizeIndex.value > -1 ? "(${product?.variations[productsController.selectedSizeIndex.value].attributes.attributeSize.name})" : ''}",
+                                    () => Text(
+                                      "${product!.title} ${productsController.selectedSizeIndex.value > -1 ? "(${product?.variations[productsController.selectedSizeIndex.value].attributes.attributeSize.name}) ${_productInfoController.selectedColorIndex.value != -1 ? '(${uniqueColors[_productInfoController.selectedColorIndex.value]})' : ''}" : ''}",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium
@@ -169,6 +184,7 @@ class ProductInfo extends StatelessWidget {
                               style: TextStyle(
                                   fontWeight: FontWeight.w100, fontSize: 12),
                             ),
+                            const Gap(5)
                           ],
                         ),
                       ),
@@ -179,71 +195,98 @@ class ProductInfo extends StatelessWidget {
                       surfaceTintColor: Colors.white,
                       color: Colors.white,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Gap(5),
-                            const Text('Select Size',style: TextStyle(fontWeight: FontWeight.bold),),
-                          Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 20.0),
-                                height: 40.0,
-                                child: ListView.builder(
+                            if (uniqueColors[0] != null) const Gap(10),
+                            if (uniqueColors[0] != null)
+                              const Text(
+                                'Select Colour',
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            if (uniqueColors[0] != null) Gap(10),
+                            if (uniqueColors[0] != null)
+                              SizedBox(
+                                height: 40,
+                                child: ListView.separated(
+                                  itemCount: uniqueColors.length,
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: product?.variations.length,
+                                  shrinkWrap: true,
                                   itemBuilder: (context, index) {
-                                    return Obx(
-                                      () => GestureDetector(
+                                    return Obx(() => GestureDetector(
+                                          onTap: () {
+                                            _productInfoController
+                                                .selectedColorIndex
+                                                .value = index;
+                                          },
+                                          child: Chip(
+                                            backgroundColor:
+                                                _productInfoController
+                                                            .selectedColorIndex
+                                                            .value ==
+                                                        index
+                                                    ? predefinedColors[uniqueColors[index]]
+                                                    : Colors.white,
+                                            shape: const StadiumBorder(),
+                                            label:
+                                                Text(uniqueColors[index] ?? ''),
+                                          ),
+                                        ));
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(width: 10),
+                                ),
+                              ),
+                            const Gap(5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Select Size',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                TextButton(
+                                    onPressed: () {},
+                                    child: const Text(
+                                      'Size Chart',
+                                      style: TextStyle(color: baseColor),
+                                    ))
+                              ],
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              margin:
+                                  const EdgeInsets.symmetric(vertical: 20.0),
+                              height: 40.0,
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 4,
+                                itemBuilder: (context, index) {
+                                  return Obx(
+                                    () => GestureDetector(
                                         onTap: () {
                                           productsController
                                               .selectedSizeIndex.value = index;
                                         },
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          width:
-                                              MediaQuery.of(context).size.width /
-                                                  product!.variations.length,
-                                          decoration: BoxDecoration(
-                                            color: productsController
-                                                        .selectedSizeIndex
-                                                        .value ==
-                                                    index
-                                                ? Colors.brown
-                                                : Colors.white,
-                                            border:
-                                                Border.all(color: Colors.black),
-                                          ),
-                                          child: Text(
-                                            product!.variations[index].attributes
-                                                .attributeSize.name,
-                                            style:  TextStyle(
-                                              color: productsController
-                                                  .selectedSizeIndex
-                                                  .value ==
+                                        child: Chip(
+                                          shape: const StadiumBorder(),
+                                          backgroundColor: productsController
+                                                      .selectedSizeIndex
+                                                      .value ==
                                                   index
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
+                                              ? baseColor
+                                              : Colors.white,
+                                          label: Text(product!.variations[index]
+                                              .attributes.attributeSize.name),
+                                        )),
+                                  );
+                                },
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(width: 10),
                               ),
-
-                            // SizedBox(
-                            //   height: 40,
-                            //   width: double.infinity,
-                            //   child: ListView.builder(
-                            //     scrollDirection: Axis.horizontal,
-                            //     shrinkWrap: false,
-                            //       itemCount: product?.variations.length,
-                            //       itemBuilder: (context,index){
-                            //     return Chip(label: Text(product!.variations[index].attributes.attributeSize.name));
-                            //   }),
-                            // )
+                            ),
                           ],
                         ),
                       ),
@@ -254,7 +297,7 @@ class ProductInfo extends StatelessWidget {
                       color: Colors.white,
                       elevation: 2,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -267,7 +310,8 @@ class ProductInfo extends StatelessWidget {
                               thickness: 1.0,
                               color: Colors.black54,
                             ),
-                            Text(product!.shortDescription)
+                            Text(product!.shortDescription),
+                            const Gap(5)
                           ],
                         ),
                       ),
@@ -278,7 +322,7 @@ class ProductInfo extends StatelessWidget {
                       color: Colors.white,
                       elevation: 2,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           children: [
                             const Gap(5),
@@ -332,40 +376,62 @@ class ProductInfo extends StatelessWidget {
               ),
             ),
             Positioned(
-              bottom: 20,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                width: MediaQuery.of(context).size.width,
-                height: 40,
-                child: MaterialButton(
-                  elevation: 10,
-                  color: Colors.brown,
-                  onPressed: () {
-                    productsController.savedProducts.contains(product)
-                        ? null
-                        : productsController.savedProducts.add(product!);
-                  },
-                  child: Obx(
-                    () => Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.add_shopping_cart_outlined,
-                          color: Colors.white,
-                        ),
-                        Gap(5),
-                        Text(
+              bottom: 10,
+              child: Material(
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Material(
+                        color: Colors.white,
+                        child: IconButton(
+                          onPressed: () {
+                            productsController.wishlistProducts.add(product!);
+                          },
+                          icon: Icon(
+                            MdiIcons.heartPlus,
+                            size: 30,
+                            color: baseColor,
+                          ),
+                        )),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: MediaQuery.of(context).size.width - 100,
+                      height: 40,
+                      child: MaterialButton(
+                        elevation: 10,
+                        color: Colors.black,
+                        onPressed: () {
                           productsController.savedProducts.contains(product)
-                              ? 'Already in Cart'
-                              : 'ADD TO CART',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge
-                              ?.copyWith(color: Colors.white),
+                              ? null
+                              : productsController.savedProducts.add(product!);
+                        },
+                        child: Obx(
+                          () => Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.add_shopping_cart_outlined,
+                                color: Colors.white,
+                              ),
+                              const Gap(5),
+                              Text(
+                                productsController.savedProducts
+                                        .contains(product)
+                                    ? 'In Bag'
+                                    : 'ADD TO BAG',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),

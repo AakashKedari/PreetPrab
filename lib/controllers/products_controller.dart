@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:get/get.dart';
+import 'package:dio/dio.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+// import 'package:get/get.dart';
 import 'package:preetprab/const.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +18,7 @@ class ProductsController extends GetxController {
   var filteredList = <Product>[].obs;
   var categorisedList = <Product>[].obs;
   var selectedSizeIndex = (-1).obs;
+  var wishlistProducts = <Product>[].obs;
 
   // Function to sort products by price in ascending order
   void sortProductsByPriceAsc() {
@@ -40,14 +44,23 @@ class ProductsController extends GetxController {
   }
 
   Future productAPICall() async {
+    final dio = Dio()
+      ..options = BaseOptions(
+        connectTimeout: const Duration(seconds: 5), // 5 seconds
+        receiveTimeout: const Duration(seconds: 5), // 5 seconds
+        sendTimeout: const Duration(seconds: 5), // 5 seconds
+      );
     log('APIMethod');
     try {
       http.Response response = await http.get(Uri.parse(APIUrls.allProducts));
+      // Response response = await dio.get(APIUrls.allProducts);
+      log("Response : ${response}");
       Map<String, dynamic> decoded = jsonDecode(response.body);
       ShopProductsDetails temp = ShopProductsDetails.fromJson(decoded);
       allShopProductDetails.value = temp;
     }
     catch(e){
+      log('API Call Failed');
       allShopProductDetails.value = ShopProductsDetails(products: [], categories: [], users: []);
     }
   }

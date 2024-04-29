@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:preetprab/screens/home.dart';
+import 'package:preetprab/screens/introPage.dart';
 import 'package:preetprab/screens/loginScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Timer(const Duration(seconds: 3), () {
       (isLogged == false || isLogged == null)
-          ? Get.offAll(() => LoginPage())
+          ? Get.offAll(() => IntroPage())
           : Get.offAll(() => HomeScreen());
     });
     super.initState();

@@ -6,6 +6,7 @@ import 'package:flutter/painting.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:preetprab/const.dart';
 import 'package:preetprab/controllers/homescreen_controller.dart';
 import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
@@ -41,9 +42,11 @@ class FirstTab extends StatelessWidget {
           width: 120,
         ),
         actions: [
-          const Icon(Icons.notifications),
+          const Icon(Icons.favorite_outline_sharp,color: baseColor,),
+          Gap(15),
+          const Icon(Icons.notifications,color: baseColor,),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.filter_alt_rounded),
+            icon: const Icon(Icons.filter_alt_rounded,color: baseColor,),
             onSelected: (value) {
               value == 'Low to High'
                   ? productsController.sortProductsByPriceAsc()
@@ -94,7 +97,7 @@ class FirstTab extends StatelessWidget {
                             AppBar().preferredSize.height -
                             kBottomNavigationBarHeight,
                         child:
-                            const Center(child: CircularProgressIndicator(color: Colors.brown,)));
+                            const Center(child: CircularProgressIndicator(color: baseColor,)));
                   }
                   else if(productsController.allShopProductDetails.value!.users.isEmpty){
                     return Column(
@@ -105,12 +108,16 @@ class FirstTab extends StatelessWidget {
                         MaterialButton(
                           color:Colors.brown,
                           onPressed: (){
+                            productsController.allShopProductDetails.value = null;
+                            log(productsController.ascProducts.length.toString());
+                            log(productsController.dscProducts.length.toString());
                           productsController.productAPICall();
                         },child: const Text('Retry',style: TextStyle(color: Colors.white),),)
                       ],
                     );
                   }
                   else {
+
                     List<Product>? fetchedProduct =
                         productsController.filteredList.isEmpty
                             ? productsController
@@ -240,13 +247,7 @@ class FirstTab extends StatelessWidget {
                                             Radius.circular(20)),
                                         child: Stack(
                                           children: [
-                                            // const Positioned.fill(
-                                            //   child: Align(
-                                            //     alignment: Alignment.center,
-                                            //     child:
-                                            //         CircularProgressIndicator(), // Add CircularProgressIndicator here
-                                            //   ),
-                                            // ),
+
                                             Container(
                                               height: MediaQuery.of(context)
                                                       .size

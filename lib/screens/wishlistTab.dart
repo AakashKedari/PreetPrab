@@ -1,27 +1,23 @@
-import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:preetprab/const.dart';
-import 'package:preetprab/controllers/products_controller.dart';
-import 'package:preetprab/screens/indiProductInfo.dart';
-import 'checkout.dart';
 
-class CartTab extends StatelessWidget {
-  CartTab({super.key});
+import '../const.dart';
+import '../controllers/products_controller.dart';
+import 'indiProductInfo.dart';
+
+class WishListTab extends StatelessWidget {
+  WishListTab({super.key});
 
   final ProductsController productsController = Get.find<ProductsController>();
 
+
   @override
   Widget build(BuildContext context) {
-    log('Cart Build Method Called');
-
-    num totalCost = productsController.savedProducts
-        .fold(0, (sum, item) => sum + int.parse(item.price!));
-
-    return Obx(
-      () => SafeArea(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body:  SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -31,7 +27,7 @@ class CartTab extends StatelessWidget {
               ListTile(
                   leading: const Icon(Icons.arrow_downward_sharp),
                   title: Text(
-                    'CART',
+                    'WishList',
                     style: Theme.of(context)
                         .textTheme
                         .headlineSmall
@@ -39,19 +35,19 @@ class CartTab extends StatelessWidget {
                   ),
                   trailing: MaterialButton(
                     color: Colors.black,
-                    onPressed: (){    Get.to(() => const CheckOut()) ;},
-                    child: const Text('CHECKOUT',style: TextStyle(color: Colors.white),),
+                    onPressed: (){    },
+                    child: const Text('ADD TO BAG',style: TextStyle(color: Colors.white),),
                   )),
               ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: productsController.savedProducts.length,
+                  itemCount: productsController.wishlistProducts.length,
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
                         Get.to(() => ProductInfo(
                             product: productsController
-                                .savedProducts[index]));
+                                .wishlistProducts[index]));
                       },
                       child: Card(
                         child: Row(
@@ -59,7 +55,7 @@ class CartTab extends StatelessWidget {
                             IconButton(
                               icon: const Icon(Icons.remove_circle_outline),
                               onPressed: () {
-                                productsController.savedProducts
+                                productsController.wishlistProducts
                                     .removeAt(index);
                               },
                             ),
@@ -67,7 +63,7 @@ class CartTab extends StatelessWidget {
                               height: MediaQuery.of(context).size.height * 0.3,
                               width: MediaQuery.of(context).size.width * 0.3,
                               imageUrl: productsController
-                                  .savedProducts[index].images![0],
+                                  .wishlistProducts[index].images[0],
                             ),
                             const Gap(10),
                             Expanded(
@@ -81,13 +77,13 @@ class CartTab extends StatelessWidget {
                                     Flexible(
                                       child: Text(
                                         productsController
-                                            .savedProducts[index].title!,
+                                            .wishlistProducts[index].title,
                                         style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
                                         maxLines: 3,
                                       ),
                                     ),
                                     Text(
-                                        "Rs. ${productsController.savedProducts[index].price}"),
+                                        "Rs. ${productsController.wishlistProducts[index].price}"),
                                   ],
                                 ),
                               ),
@@ -109,41 +105,18 @@ class CartTab extends StatelessWidget {
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                                  fontWeight: FontWeight.w100,
-                                  color: Colors.grey,
-                                )),
+                              fontWeight: FontWeight.w100,
+                              color: Colors.grey,
+                            )),
                         Text(
-                          productsController.savedProducts.length.toString(),
+                          productsController.wishlistProducts.length.toString(),
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium
                               ?.copyWith(
-                                fontWeight: FontWeight.w100,
-                                color: Colors.grey,
-                              ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Total : ',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                        Text(
-                          'Rs. ${totalCost.toString()}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                            fontWeight: FontWeight.w100,
+                            color: Colors.grey,
+                          ),
                         )
                       ],
                     ),
@@ -152,16 +125,16 @@ class CartTab extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        productsController.savedProducts.clear();
+                        productsController.wishlistProducts.clear();
                       },
                       child: Container(
                         height: 40,
                         color: baseColor,
                         child: const Center(
                             child: Text(
-                          'CLEAR CART',
-                          style: TextStyle(color: Colors.white),
-                        )),
+                              'CLEAR WISHLIST',
+                              style: TextStyle(color: Colors.white),
+                            )),
                       ),
                     )
                   ],

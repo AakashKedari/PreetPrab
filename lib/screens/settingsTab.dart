@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:preetprab/const.dart';
 import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/screens/loginScreen.dart';
 import 'package:preetprab/utils/auth.dart';
@@ -68,9 +69,9 @@ Widget ProfileTab() {
               children: [
                 Text(
                   '${productsController.savedProducts.length} items',
-                  style: const TextStyle(color: Colors.brown),
+                  style: const TextStyle(color:baseColor),
                 ),
-                const Icon(Icons.keyboard_arrow_right)
+                const Icon(Icons.keyboard_arrow_right,color: baseColor,)
               ],
             ),
           ),
@@ -86,6 +87,7 @@ Widget ProfileTab() {
             trailing: Transform.scale(
               scale: 0.8,
               child: Switch(
+                activeColor: baseColor,
                 value: true,
                 onChanged: (bool value) {},
               ),
@@ -109,21 +111,8 @@ Widget ProfileTab() {
               'Order History',
               style: TextStyle(fontWeight: FontWeight.w100, fontSize: 15),
             ),
-            trailing: Icon(Icons.keyboard_arrow_right),
+            trailing: Icon(Icons.keyboard_arrow_right,color: baseColor,),
           ),
-          // const ListTile(
-          //   horizontalTitleGap: 30,
-          //   leading: Icon(
-          //     color: Colors.grey,
-          //     Icons.star_rate_outlined,
-          //     size: 30,
-          //   ),
-          //   title: Text(
-          //     'Rate the App',
-          //     style: TextStyle(fontWeight: FontWeight.w100, fontSize: 15),
-          //   ),
-          //   trailing: Icon(Icons.keyboard_arrow_right),
-          // ),
           ListTile(
             onTap: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -140,7 +129,7 @@ Widget ProfileTab() {
               'Logout',
               style: TextStyle(fontWeight: FontWeight.w100, fontSize: 15),
             ),
-            trailing: const Icon(Icons.keyboard_arrow_right),
+            trailing: const Icon(Icons.keyboard_arrow_right,color: baseColor,),
           ),
         ],
       ),

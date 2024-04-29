@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:preetprab/const.dart';
 import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/main.dart';
 import '../models/shopProductsDetails.dart';
@@ -46,9 +47,11 @@ class CategoryTab extends StatelessWidget {
           width: 120,
         ),
         actions: [
-          const Icon(Icons.notifications),
+          const Icon(Icons.favorite_outline_sharp,color: baseColor,),
+          Gap(15),
+          const Icon(Icons.notifications,color: baseColor,),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.filter_alt_rounded),
+            icon: const Icon(Icons.filter_alt_rounded,color: baseColor,),
             onSelected: (value) {
               value == 'Low to High'
                   ? productsController.sortProductsByPriceAsc()
@@ -72,10 +75,10 @@ class CategoryTab extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Shop',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
+              // const Text(
+              //   'Shop',
+              //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              // ),
               ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -95,8 +98,9 @@ class CategoryTab extends StatelessWidget {
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
+                                      baseColor,
                                   Colors.brown.shade300,
-                                  Colors.brown.shade500
+
                                 ])),
                             height: 80,
                             child: ListTile(

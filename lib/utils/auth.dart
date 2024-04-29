@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
+import 'package:dio_retry_plus/dio_retry_plus.dart';
 import 'package:get/get.dart';
 import 'package:preetprab/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +11,18 @@ class AuthService{
 
   static String? currentUser;
   static String? currentUserEmail;
+
+
+  //   ..interceptors.add( RetryInterceptor(
+  //
+  //     dio: dio,
+  //     options: RetryOptions(
+  //       retries: 3, // Number of retries before a failure
+  //       retryInterval: const Duration(seconds: 1), // Interval between each retry
+  //       retryEvaluator: (error) => error.type != DioErrorType.CANCEL && error.type != DioErrorType.RESPONSE, // Evaluating if a request should be retried
+  //     ),
+  //   ));
+
 
   Future<bool> authenticate(String username,String password) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();

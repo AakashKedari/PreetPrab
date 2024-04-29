@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:preetprab/const.dart';
 import 'package:preetprab/controllers/signController.dart';
 import 'package:preetprab/screens/home.dart';
 import 'package:preetprab/screens/loginScreen.dart';
@@ -33,24 +34,27 @@ class RegisterPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
             SizedBox(
               height: 50,
               child: TextFormField(
-
+                textAlignVertical: TextAlignVertical.center,
                 controller: usernameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
+
                   contentPadding: EdgeInsets.zero,
-                  filled: true,fillColor: Colors.brown.shade50,
-                  prefixIcon: const Icon(Icons.perm_identity),
+                  prefixIcon: Icon(Icons.perm_identity),
                   hintText: 'Username',
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey, // Color of the underline
+                      width: 1.0,
+                    ),),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey, // Color of the underline
+                      width: 1.0,
+                    ),),
                 ),
               ),
             ),
@@ -58,20 +62,23 @@ class RegisterPage extends StatelessWidget {
             SizedBox(
               height: 50,
               child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+
                 controller: emailController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   contentPadding: EdgeInsets.zero,
-                  filled: true,fillColor: Colors.brown.shade50,
-                  prefixIcon: const Icon(Icons.email),
+                  prefixIcon: Icon(Icons.email),
                   hintText: 'Email',
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey, // Color of the underline
+                      width: 1.0,
+                    ),),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey, // Color of the underline
+                      width: 1.0,
+                    ),),
                 ),
               ),
             ),
@@ -80,27 +87,30 @@ class RegisterPage extends StatelessWidget {
               () => SizedBox(
                 height: 50,
                 child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+
                   obscureText: signController.obscure.value,
                   controller: passwordController,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.zero,
-                    filled: true,fillColor: Colors.brown.shade50,
                     prefixIcon: const Icon(Icons.password),
                     suffixIcon: IconButton(
                       onPressed: (){
                         signController.obscure.value = !signController.obscure.value;
                       },
-                      icon: signController.obscure.value ? const Icon( Icons.visibility) : const Icon(Icons.visibility_off),
+                      icon: signController.obscure.value ? const Icon( Icons.visibility,color: baseColor,) : const Icon(Icons.visibility_off,color: baseColor,),
                     ),
                     hintText: 'Password',
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.brown, width: 2.0),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey, // Color of the underline
+                        width: 1.0,
+                      ),),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey, // Color of the underline
+                        width: 1.0,
+                      ),),
                   ),
                 ),
               ),
@@ -110,8 +120,8 @@ class RegisterPage extends StatelessWidget {
               return !signController.isLoading.value
                   ? MaterialButton(
                 minWidth: double.infinity,
-                shape: StadiumBorder(),
-                      color: Colors.brown,
+                shape: const StadiumBorder(),
+                      color: baseColor,
                       onPressed: () async {
                         signController.isLoading.value = true;
                         bool isRegistered = await AuthService().registerUser(
@@ -134,9 +144,9 @@ class RegisterPage extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                       ),
                     )
-                  : const CircularProgressIndicator(color: Colors.brown,);
+                  : const Center(child: CircularProgressIndicator(color: Colors.brown,));
             }),
-            const Gap(5),
+            // const Gap(5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -145,7 +155,7 @@ class RegisterPage extends StatelessWidget {
                     onPressed: () {
                       Get.offAll(LoginPage());
                     },
-                    child: const Text('Login',style: TextStyle(color: Colors.brown,fontWeight: FontWeight.bold),))
+                    child: const Text('Login',style: TextStyle(color: baseColor,fontWeight: FontWeight.bold),))
               ],
             )
           ],
