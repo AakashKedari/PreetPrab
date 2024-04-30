@@ -3,21 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:preetprab/screens/home.dart';
 import 'package:preetprab/screens/introPage.dart';
-import 'package:preetprab/screens/loginScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
-
   const SplashScreen({super.key});
 
   @override
-
   State<SplashScreen> createState() => _SplashScreenState();
 
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
   bool? isLogged;
+
   void checkLoggedIn() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -29,12 +28,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     checkLoggedIn();
 
     Timer(const Duration(seconds: 3), () {
       (isLogged == false || isLogged == null)
-          ? Get.offAll(() => IntroPage())
+          ? Get.offAll(() => const IntroPage())
           : Get.offAll(() => HomeScreen());
     });
     super.initState();

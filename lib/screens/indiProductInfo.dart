@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -20,6 +21,8 @@ class ProductInfo extends StatelessWidget {
   final ProductInfoController _productInfoController =
       Get.put(ProductInfoController());
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     final List<String?>? uniqueColors = product?.variations
@@ -38,13 +41,14 @@ class ProductInfo extends StatelessWidget {
           'assets/images/transparent.png',
           width: 120,
         ),
-        actions: const [Icon(Icons.add_shopping_cart_outlined), Gap(10)],
+        actions: const [Icon(CupertinoIcons.cart), Gap(10)],
       ),
       body: SafeArea(
         child: Stack(
           alignment: Alignment.center,
           children: [
             SingleChildScrollView(
+              controller: _scrollController,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -206,7 +210,7 @@ class ProductInfo extends StatelessWidget {
                                 textAlign: TextAlign.start,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                            if (uniqueColors[0] != null) Gap(10),
+                            if (uniqueColors[0] != null) const Gap(10),
                             if (uniqueColors[0] != null)
                               SizedBox(
                                 height: 40,
@@ -227,7 +231,8 @@ class ProductInfo extends StatelessWidget {
                                                             .selectedColorIndex
                                                             .value ==
                                                         index
-                                                    ? predefinedColors[uniqueColors[index]]
+                                                    ? predefinedColors[
+                                                        uniqueColors[index]]
                                                     : Colors.white,
                                             shape: const StadiumBorder(),
                                             label:
@@ -292,84 +297,15 @@ class ProductInfo extends StatelessWidget {
                       ),
                     ),
                     const Gap(15),
-                    Card(
-                      surfaceTintColor: Colors.white,
-                      color: Colors.white,
-                      elevation: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Gap(5),
-                            const Text(
-                              'Description : ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const Divider(
-                              thickness: 1.0,
-                              color: Colors.black54,
-                            ),
-                            Text(product!.shortDescription),
-                            const Gap(5)
-                          ],
-                        ),
-                      ),
-                    ),
+
+                    /// Description Card
+                    DescriptionCard(),
                     const Gap(15),
-                    Card(
-                      surfaceTintColor: Colors.white,
-                      color: Colors.white,
-                      elevation: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            const Gap(5),
-                            const Center(
-                              child: Text(
-                                'Reviews : ',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            const Divider(
-                              thickness: 1.0,
-                              color: Colors.black54,
-                            ),
-                            ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: product?.reviews.length,
-                                itemBuilder: (context, index) {
-                                  String formattedDate =
-                                      DateFormat('dd/MM/yyyy')
-                                          .format(product!.reviews[index].date);
-                                  return Column(
-                                    children: [
-                                      ListTile(
-                                        leading: CircleAvatar(
-                                          child: Text(product!
-                                              .reviews[index].author[0]
-                                              .toUpperCase()),
-                                        ),
-                                        title: Text(
-                                            product!.reviews[index].author),
-                                        trailing: Text(formattedDate),
-                                      ),
-                                      const Gap(10),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        child: Text(
-                                            "\"${product!.reviews[index].content}\""),
-                                      ),
-                                      const Gap(10),
-                                    ],
-                                  );
-                                })
-                          ],
-                        ),
-                      ),
-                    ),
+
+                    /// Reviews Card
+                    ReviewCard(),
+                    const Gap(15),
+                    DeliveryCard(context),
                     const Gap(50)
                   ],
                 ),
@@ -439,5 +375,199 @@ class ProductInfo extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Card DescriptionCard() {
+    return Card(
+                    surfaceTintColor: Colors.white,
+                    color: Colors.white,
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Gap(5),
+                          const Text(
+                            'Description : ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const Divider(
+                            thickness: 1.0,
+                            color: Colors.black54,
+                          ),
+                          Text(product!.shortDescription),
+                          const Gap(5)
+                        ],
+                      ),
+                    ),
+                  );
+  }
+
+  Card DeliveryCard(BuildContext context) {
+    return Card(
+                    surfaceTintColor: Colors.white,
+                    color: Colors.white,
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Gap(5),
+                          const Center(
+                            child: Text(
+                              'Check Delivery ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Text(
+                            'Enter pincode to know exact delivery status',
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                          Gap(5),
+                          TextField(
+                            onTap: () {
+                              Future.delayed(Duration(milliseconds: 600), () {
+                                _scrollController.animateTo(
+                                    _scrollController
+                                        .position.maxScrollExtent,
+                                    duration: Duration(milliseconds: 400),
+                                    curve: Curves.easeOut);
+                              });
+                            },
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              suffixIcon: const Padding(
+                                padding: EdgeInsets.only(
+                                    right:
+                                        8.0), // Adjust the padding as needed
+                                child: Chip(
+                                  label: Text('Check'),
+                                ),
+                              ),
+// suffixStyle: TextStyle(color: Colors.black),
+                              hintText: 'PinCode',
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.black.withOpacity(0.4),
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10))),
+                            ),
+                          ),
+                          Gap(5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: [
+                                  Icon(
+                                    Icons.delivery_dining_rounded,
+                                    size: 40,
+                                    color: Colors.pink.shade100,
+                                  ),
+                                  Text(
+                                    'Free Delivery',
+                                    style: TextStyle(fontSize: 10),
+                                  )
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(
+                                    Icons.compare_arrows,
+                                    size: 40,
+                                    color: Colors.pink.shade100,
+                                  ),
+                                  Text(
+                                    '7-Day Exchange',
+                                    style: TextStyle(fontSize: 10),
+                                  )
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(
+                                    MdiIcons.cashPlus,
+                                    size: 40,
+                                    color: Colors.pink.shade100,
+                                  ),
+                                  Text(
+                                    'COD',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                    ),
+                                    maxLines: 2,
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                          Gap(5)
+                        ],
+                      ),
+                    ),
+                  );
+  }
+
+  Card ReviewCard() {
+    return Card(
+                    surfaceTintColor: Colors.white,
+                    color: Colors.white,
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          const Gap(5),
+                          const Center(
+                            child: Text(
+                              'Reviews : ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const Divider(
+                            thickness: 1.0,
+                            color: Colors.black54,
+                          ),
+                          ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: product?.reviews.length,
+                              itemBuilder: (context, index) {
+                                String formattedDate =
+                                    DateFormat('dd/MM/yyyy')
+                                        .format(product!.reviews[index].date);
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      leading: CircleAvatar(
+                                        child: Text(product!
+                                            .reviews[index].author[0]
+                                            .toUpperCase()),
+                                      ),
+                                      title: Text(
+                                          product!.reviews[index].author),
+                                      trailing: Text(formattedDate),
+                                    ),
+                                    const Gap(10),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Text(
+                                          "\"${product!.reviews[index].content}\""),
+                                    ),
+                                    const Gap(10),
+                                  ],
+                                );
+                              }),
+                          const Gap(5)
+                        ],
+                      ),
+                    ),
+                  );
   }
 }

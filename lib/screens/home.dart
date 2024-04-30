@@ -10,19 +10,28 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:preetprab/const.dart';
 import 'package:preetprab/controllers/homescreen_controller.dart';
-
 import 'package:preetprab/screens/productsTab.dart';
-import 'package:preetprab/screens/categoryTab.dart';
 import 'package:preetprab/screens/settingsTab.dart';
 import 'package:preetprab/screens/wishlistTab.dart';
 import '../controllers/products_controller.dart';
 import 'cartTab.dart';
+import 'categoryTab.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final ProductsController productsController = Get.find<ProductsController>();
   final HomeScreenController homeScreenController = HomeScreenController();
+
+  final PageController controller = PageController();
+
+  final tabPages =  [
+      FirstTab(),
+      CategoryTab(),
+      WishListTab(),
+      CartTab(),
+      ProfileTab(),
+    ];
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +182,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     if (homeScreenController.couponReveal.value == false)
                       MaterialButton(
-                        shape: StadiumBorder(),
+                        shape: const StadiumBorder(),
                         color: Colors.white.withOpacity(0.8),
                         onPressed: () {
                           homeScreenController.confettiController.play();
@@ -183,7 +192,7 @@ class HomeScreen extends StatelessWidget {
                           //     () => homeScreenController.confettiController
                           //         .dispose()); },
                         },
-                        child: Padding(
+                        child: const Padding(
                           padding: EdgeInsets.all(2.0),
                           child: Text('Tap to Unlock'),
                         ),
@@ -202,6 +211,7 @@ class HomeScreen extends StatelessWidget {
             elevation: 0,
             type: BottomNavigationBarType.fixed,
             onTap: (index) {
+              controller.jumpToPage(index);
               homeScreenController.currentIndex.value = index;
             },
             currentIndex: homeScreenController.currentIndex.value,
@@ -293,18 +303,24 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        body: Obx(
-          () => IndexedStack(
-            index: homeScreenController.currentIndex.value,
-            children: [
-              FirstTab(),
-              CategoryTab(),
-              WishListTab(),
-              CartTab(),
-              ProfileTab(),
-            ],
-          ),
-        )
+        body: PageView(
+            controller: controller,
+            children: tabPages,
+            onPageChanged: (index){
+              homeScreenController.currentIndex.value = index;
+            },
+          )
+          //     IndexedStack(
+          //   index: homeScreenController.currentIndex.value,
+          //   children: [
+          //     FirstTab(),
+          //     CategoryTab(),
+          //     WishListTab(),
+          //     CartTab(),
+          //     ProfileTab(),
+          //   ],
+          // ),
+
         // Obx(() => homeScreenController.currentIndex.value == 0 ?  FirstTab() : homeScreenController.currentIndex.value == 1 ? CategoryTab() : homeScreenController.currentIndex.value == 2 ? CartTab() : ProfileTab()),
         );
   }

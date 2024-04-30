@@ -8,14 +8,20 @@ import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
 import 'checkout.dart';
 
-class CartTab extends StatelessWidget {
+class CartTab extends StatefulWidget {
   CartTab({super.key});
 
+  @override
+  State<CartTab> createState() => _CartTabState();
+}
+
+class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin {
   final ProductsController productsController = Get.find<ProductsController>();
 
   @override
   Widget build(BuildContext context) {
     log('Cart Build Method Called');
+    super.build(context);
 
     num totalCost = productsController.savedProducts
         .fold(0, (sum, item) => sum + int.parse(item.price!));
@@ -173,4 +179,8 @@ class CartTab extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

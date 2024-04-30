@@ -109,6 +109,8 @@ class LoginPage extends StatelessWidget {
                   minWidth: double.infinity,
                       color: baseColor,
                       onPressed: () async {
+                    /// To make the keyboard disappear if using decides to click login button
+                    FocusScope.of(context).unfocus();
                         signController.isLoading.value = true;
                         bool isValid = await AuthService().authenticate(
                             usernameController.text, passwordController.text);
@@ -116,13 +118,15 @@ class LoginPage extends StatelessWidget {
                         isValid
                             ? Get.offAll(() => HomeScreen())
                             : null;
-                        signController.isLoading.value = false;
                       },
                       child: const Text(
                         'Login',
                         style: TextStyle(color: Colors.white),
                       ))
-                  : const Center(child: CircularProgressIndicator(color: Color(0xffC23602),));
+                  : const Center(child: CupertinoActivityIndicator(
+                color: baseColor,
+                radius: 15,
+              ));
             }),
             const Gap(10),
             const Center(child: Text('Or Login With')),

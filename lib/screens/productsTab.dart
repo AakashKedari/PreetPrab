@@ -1,8 +1,10 @@
 import 'dart:developer';
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +15,15 @@ import 'package:preetprab/models/shopProductsDetails.dart';
 import 'package:preetprab/screens/categoryTab.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
 
-class FirstTab extends StatelessWidget {
-  FirstTab({super.key});
+class FirstTab extends StatefulWidget {
+  const FirstTab({super.key});
 
+  @override
+  State<FirstTab> createState() => _FirstTabState();
+}
+
+class _FirstTabState extends State<FirstTab>
+    with AutomaticKeepAliveClientMixin {
   final ProductsController productsController = Get.find<ProductsController>();
 
   final ScrollController _scrollController = ScrollController();
@@ -27,8 +35,8 @@ class FirstTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     log("ProductsTab Rebuild");
-    log('TextField Value : ${searchTextEditingController.value.text}');
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -42,11 +50,20 @@ class FirstTab extends StatelessWidget {
           width: 120,
         ),
         actions: [
-          const Icon(Icons.favorite_outline_sharp,color: baseColor,),
-          Gap(15),
-          const Icon(Icons.notifications,color: baseColor,),
+          const Icon(
+            Icons.favorite_outline_sharp,
+            color: baseColor,
+          ),
+          const Gap(15),
+          const Icon(
+            Icons.notifications,
+            color: baseColor,
+          ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.filter_alt_rounded,color: baseColor,),
+            icon: const Icon(
+              Icons.filter_alt_rounded,
+              color: baseColor,
+            ),
             onSelected: (value) {
               value == 'Low to High'
                   ? productsController.sortProductsByPriceAsc()
@@ -96,28 +113,37 @@ class FirstTab extends StatelessWidget {
                         height: MediaQuery.of(context).size.height -
                             AppBar().preferredSize.height -
                             kBottomNavigationBarHeight,
-                        child:
-                            const Center(child: CircularProgressIndicator(color: baseColor,)));
-                  }
-                  else if(productsController.allShopProductDetails.value!.users.isEmpty){
+                        child: const Center(
+                            child: CircularProgressIndicator(
+                          color: baseColor,
+                        )));
+                  } else if (productsController
+                      .allShopProductDetails.value!.users.isEmpty) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Center(child: Text('Check Connectivity & try again')),
+                        const Center(
+                            child: Text('Check Connectivity & try again')),
                         MaterialButton(
-                          color:Colors.brown,
-                          onPressed: (){
-                            productsController.allShopProductDetails.value = null;
-                            log(productsController.ascProducts.length.toString());
-                            log(productsController.dscProducts.length.toString());
-                          productsController.productAPICall();
-                        },child: const Text('Retry',style: TextStyle(color: Colors.white),),)
+                          color: baseColor,
+                          onPressed: () {
+                            productsController.allShopProductDetails.value =
+                                null;
+                            log(productsController.ascProducts.length
+                                .toString());
+                            log(productsController.dscProducts.length
+                                .toString());
+                            productsController.productAPICall();
+                          },
+                          child: const Text(
+                            'Retry',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
                       ],
                     );
-                  }
-                  else {
-
+                  } else {
                     List<Product>? fetchedProduct =
                         productsController.filteredList.isEmpty
                             ? productsController
@@ -128,22 +154,53 @@ class FirstTab extends StatelessWidget {
                       children: [
                         const Gap(10),
                         SizedBox(
-                          height: 60,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            padding: EdgeInsets.zero,
-                            scrollDirection: Axis.horizontal,
-                              itemCount:  7 ,
-                              itemBuilder: (context,index){
-                            return GestureDetector(
-                              onTap: (){
-                                Get.to(()=> CategoryTab());
-                              },
-                              child: const CircleAvatar(
-                              radius: 40,
-                              ),
-                            );
-                          }),
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          child: Center(
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 4,
+                                itemBuilder: (context, index) {
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      InkWell(
+                                        onTap: () => Get.to(() => CategoryTab(
+                                              bannerProductName: index == 0
+                                                  ? 'Kurtis'
+                                                  : index == 1
+                                                      ? 'Gowns'
+                                                      : index == 2
+                                                          ? 'Short Dress'
+                                                          : 'Long Dress',
+                                            )),
+                                        child: CircleAvatar(
+                                          radius: 40,
+                                          backgroundColor: Colors.purple.shade50,
+                                          foregroundImage: AssetImage(
+                                              'assets/images/banner_${index + 1}.png'),
+                                        ),
+                                      ),
+                                      const Gap(5),
+                                      Flexible(
+                                          child: Text(
+                                        index == 0
+                                            ? 'Kurtis'
+                                            : index == 1
+                                                ? 'Gowns'
+                                                : index == 2
+                                                    ? 'Short Dress'
+                                                    : 'Long Dress',
+                                        maxLines: 2,
+                                        style: const TextStyle(fontSize: 10,fontWeight: FontWeight.bold),
+                                      ))
+                                    ],
+                                  );
+                                }),
+                          ),
                         ),
                         const Gap(10),
                         SizedBox(
@@ -221,7 +278,7 @@ class FirstTab extends StatelessWidget {
                                       : productsController.filterName.value ==
                                               'High to Low'
                                           ? productsController.dscProducts
-                                          : fetchedProduct!;
+                                          : fetchedProduct;
 
                               /// Here the fetchedProduct will be the list of
                               /// Original API fetched Products or Filtered
@@ -247,7 +304,6 @@ class FirstTab extends StatelessWidget {
                                             Radius.circular(20)),
                                         child: Stack(
                                           children: [
-
                                             Container(
                                               height: MediaQuery.of(context)
                                                       .size
@@ -260,11 +316,13 @@ class FirstTab extends StatelessWidget {
                                                 image: DecorationImage(
                                                   image: CachedNetworkImageProvider(
                                                       gridProducts[index]
-                                                              .images!
+                                                              .images
                                                               .isNotEmpty
                                                           ? gridProducts[index]
-                                                              .images![0]
-                                                          : 'https://preetprab.com/wp-content/uploads/2024/04/IMG-20240401-WA0107.jpg'), /// Incase the images array from API is empty
+                                                              .images[0]
+                                                          : 'https://preetprab.com/wp-content/uploads/2024/04/IMG-20240401-WA0107.jpg'),
+
+                                                  /// Incase the images array from API is empty
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -274,7 +332,8 @@ class FirstTab extends StatelessWidget {
                                       ),
                                       Flexible(
                                         child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(5,0,2,0),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              5, 0, 2, 0),
                                           child: Text(
                                             gridProducts[index].title,
                                             style: Theme.of(context)
@@ -285,9 +344,10 @@ class FirstTab extends StatelessWidget {
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(8,0,2,0),
+                                        padding: const EdgeInsets.fromLTRB(
+                                            8, 0, 2, 0),
                                         child: Text(
-                                          "\u20B9 ${productsController.filterName.value == 'Low to High' ? productsController.ascProducts[index].price : productsController.filterName.value == 'High to Low' ? productsController.dscProducts[index].price : fetchedProduct![index].price}",
+                                          "\u20B9 ${productsController.filterName.value == 'Low to High' ? productsController.ascProducts[index].price : productsController.filterName.value == 'High to Low' ? productsController.dscProducts[index].price : fetchedProduct[index].price}",
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelMedium,
@@ -295,36 +355,75 @@ class FirstTab extends StatelessWidget {
                                         ),
                                       ),
                                       Center(
-                                        child: InkWell(
-                                          onTap: () {
-                                            !productsController.savedProducts
-                                                    .contains(
-                                                        gridProducts[index])
-                                                ? productsController
-                                                    .savedProducts
-                                                    .add(gridProducts[index])
-                                                : null;
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.brown,
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            height: 25,
-                                            width: 100,
-                                            child: Center(
-                                              child: Text(
-                                                productsController.savedProducts
+                                        child: Row(
+                                          children: [
+                                            Obx(
+                                              () => IconButton(
+                                                  onPressed: () {
+                                                    productsController
+                                                            .wishlistProducts
+                                                            .contains(
+                                                                gridProducts[
+                                                                    index])
+                                                        ? productsController
+                                                            .wishlistProducts
+                                                            .remove(
+                                                                gridProducts[
+                                                                    index])
+                                                        : productsController
+                                                            .wishlistProducts
+                                                            .add(gridProducts[
+                                                                index]);
+                                                  },
+                                                  icon: Icon(
+                                                    productsController
+                                                            .wishlistProducts
+                                                            .contains(
+                                                                gridProducts[
+                                                                    index])
+                                                        ? Icons.favorite
+                                                        : Icons
+                                                            .favorite_outline_sharp,
+                                                    color: baseColor,
+                                                  )),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                !productsController
+                                                        .savedProducts
                                                         .contains(
                                                             gridProducts[index])
-                                                    ? 'In Bag'
-                                                    : 'Add to Bag',
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12),
+                                                    ? productsController
+                                                        .savedProducts
+                                                        .add(
+                                                            gridProducts[index])
+                                                    : null;
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: baseColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                height: 25,
+                                                width: 100,
+                                                child: Center(
+                                                  child: Text(
+                                                    productsController
+                                                            .savedProducts
+                                                            .contains(
+                                                                gridProducts[
+                                                                    index])
+                                                        ? 'In Bag'
+                                                        : 'ADD TO BAG',
+                                                    style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12),
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
+                                          ],
                                         ),
                                       )
                                     ],
@@ -351,8 +450,8 @@ class FirstTab extends StatelessWidget {
             productsController.filteredList.value = [];
           } else {
             productsController.filteredList.value = productsController
-                .allShopProductDetails.value!.products!
-                .where((element) => element.title!
+                .allShopProductDetails.value!.products
+                .where((element) => element.title
                     .toLowerCase()
                     .contains(value.toString().toLowerCase()))
                 .toList();
@@ -413,4 +512,8 @@ class FirstTab extends StatelessWidget {
               ),
             )));
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

@@ -9,13 +9,47 @@ import 'package:preetprab/main.dart';
 import '../models/shopProductsDetails.dart';
 import 'indiProductInfo.dart';
 
-class CategoryTab extends StatelessWidget {
+class CategoryTab extends StatefulWidget {
+  final String bannerProductName;
+
+  CategoryTab({super.key, this.bannerProductName = ''});
+
+  @override
+  State<CategoryTab> createState() => _CategoryTabState();
+}
+
+class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClientMixin {
   final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if(widget.bannerProductName !='') {
+      productsController.categorisedList.value = productsController
+          .allShopProductDetails.value!.products
+          .where((product) {
+        return product.categories.contains(bannertoProduct[widget.bannerProductName]);
+      }).toList();
+
+      Future.delayed(const Duration(milliseconds: 500),(){
+        scrollController.animateTo(MediaQuery.of(context).size.height - kBottomNavigationBarHeight - AppBar().preferredSize.height, duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
+
+      });
+    }
+  }
+
+  Map bannertoProduct = {
+    'Kurtis' : CategoryEnum.KURTIS,
+    'Gowns' : CategoryEnum.GOWN,
+    'Short Dress' : CategoryEnum.SHORT_DRESSES,
+    'Long Dress' : CategoryEnum.LONG_DRESSES
+  };
+
   final GlobalKey _imageKey = GlobalKey();
 
   final ProductsController productsController = Get.find<ProductsController>();
-
-  CategoryTab({super.key});
 
   void fetchCategoryWiseProducts(CategoryEnum categoryEnum) {
     productsController.categorisedList.value = productsController
@@ -34,6 +68,9 @@ class CategoryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    super.build(context);
+
     log('Category Tab Built');
     return Scaffold(
       backgroundColor: Colors.white,
@@ -48,7 +85,7 @@ class CategoryTab extends StatelessWidget {
         ),
         actions: [
           const Icon(Icons.favorite_outline_sharp,color: baseColor,),
-          Gap(15),
+          const Gap(15),
           const Icon(Icons.notifications,color: baseColor,),
           PopupMenuButton<String>(
             icon: const Icon(Icons.filter_alt_rounded,color: baseColor,),
@@ -110,7 +147,8 @@ class CategoryTab extends StatelessWidget {
                               ),
                             ),
                           ),
-                        )
+                        ),
+
                       ],
                     );
                   }),
@@ -168,7 +206,7 @@ class CategoryTab extends StatelessWidget {
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelLarge,
-                                      overflow: TextOverflow.fade,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   Text(
@@ -176,6 +214,71 @@ class CategoryTab extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.labelMedium,
                                     overflow: TextOverflow.fade,
+                                  ),
+                                  Center(
+                                    child: Row(
+                                      children: [
+                                        Obx(
+                                              () => IconButton(
+                                              onPressed: () {
+                                                productsController
+                                                    .wishlistProducts
+                                                    .contains(
+                                                    productsController.categorisedList[
+                                                    index])
+                                                    ? productsController
+                                                    .wishlistProducts
+                                                    .remove(productsController.categorisedList[
+                                                index])
+                                                    : productsController
+                                                    .wishlistProducts
+                                                    .add(productsController.categorisedList[
+                                                index]);
+                                              },
+                                              icon: Icon(
+                                                productsController.wishlistProducts.contains(productsController.categorisedList[index]) ? Icons.favorite :
+                                                Icons.favorite_outline_sharp,
+                                                color: baseColor,
+                                              )),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            !productsController
+                                                .savedProducts
+                                                .contains(
+                                                productsController.categorisedList[index])
+                                                ? productsController
+                                                .savedProducts
+                                                .add(
+                                                productsController.categorisedList[index])
+                                                : null;
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: baseColor,
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    10)),
+                                            height: 25,
+                                            width: 100,
+                                            child: Center(
+                                              child: Text(
+                                                productsController
+                                                    .savedProducts
+                                                    .contains(
+                                                    productsController.categorisedList[
+                                                    index])
+                                                    ? 'In Bag'
+                                                    : 'ADD TO BAG',
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   )
                                 ],
                               ),
@@ -189,4 +292,8 @@ class CategoryTab extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

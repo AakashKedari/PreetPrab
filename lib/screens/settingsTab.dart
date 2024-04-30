@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:preetprab/const.dart';
 import 'package:preetprab/controllers/products_controller.dart';
+import 'package:preetprab/screens/introPage.dart';
 import 'package:preetprab/screens/loginScreen.dart';
 import 'package:preetprab/utils/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +28,7 @@ Widget ProfileTab() {
           ),
           ListTile(
             leading: const CircleAvatar(
-              backgroundImage: AssetImage('assets/images/men.png'),
+              // backgroundImage: AssetImage('assets/images/men.png'),
             ),
             title: Text( AuthService.currentUser ??
               // productsController
@@ -117,7 +118,7 @@ Widget ProfileTab() {
             onTap: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               prefs.setBool("isLoggedIn", false);
-              Get.offAll(LoginPage());
+              Get.offAll(() => IntroPage());
             },
             horizontalTitleGap: 30,
             leading: const Icon(

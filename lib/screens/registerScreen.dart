@@ -123,6 +123,8 @@ class RegisterPage extends StatelessWidget {
                 shape: const StadiumBorder(),
                       color: baseColor,
                       onPressed: () async {
+                        /// To make the keyboard disappear if using decides to click login button
+                        FocusScope.of(context).unfocus();
                         signController.isLoading.value = true;
                         bool isRegistered = await AuthService().registerUser(
                             usernameController.text,
