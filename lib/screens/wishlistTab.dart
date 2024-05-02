@@ -7,7 +7,7 @@ import '../controllers/products_controller.dart';
 import 'indiProductInfo.dart';
 
 class WishListTab extends StatefulWidget {
-  WishListTab({super.key});
+  const WishListTab({super.key});
 
   @override
   State<WishListTab> createState() => _WishListTabState();

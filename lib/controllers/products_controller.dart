@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
+import 'dart:io';
+import 'package:dio/dio.dart' as DIO;
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-// import 'package:get/get.dart';
 import 'package:preetprab/const.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
-import 'package:http/http.dart' as http;
 
 
 class ProductsController extends GetxController {
@@ -20,6 +21,12 @@ class ProductsController extends GetxController {
   var selectedSizeIndex = (-1).obs;
   var wishlistProducts = <Product>[].obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    productAPICall();
+  }
+
   // Function to sort products by price in ascending order
   void sortProductsByPriceAsc() {
     List<Product> temp = List.from(allShopProductDetails.value!.products);
@@ -31,6 +38,7 @@ class ProductsController extends GetxController {
 
     filterName.value = 'Low to High';
   }
+
 // Function to sort products by price in descending order
   void sortProductsByPriceDesc() {
 
@@ -44,23 +52,28 @@ class ProductsController extends GetxController {
   }
 
   Future productAPICall() async {
-    final dio = Dio()
-      ..options = BaseOptions(
+    final dio = DIO.Dio()
+      ..options = DIO.BaseOptions(
         connectTimeout: const Duration(seconds: 5), // 5 seconds
         receiveTimeout: const Duration(seconds: 5), // 5 seconds
         sendTimeout: const Duration(seconds: 5), // 5 seconds
       );
     log('APIMethod');
     try {
-      http.Response response = await http.get(Uri.parse(APIUrls.allProducts));
-      // Response response = await dio.get(APIUrls.allProducts);
-      log("Response : ${response}");
-      Map<String, dynamic> decoded = jsonDecode(response.body);
+      DIO.Response response = await dio.get(APIUrls.allProducts);
+      print("Response: ${response}");
+
+      /// Decode the response data
+      Map<String, dynamic> decoded = jsonDecode(response.toString());
+
+      /// Finally we here convert the data received from Json Response in our Model
       ShopProductsDetails temp = ShopProductsDetails.fromJson(decoded);
       allShopProductDetails.value = temp;
+
     }
     catch(e){
       log('API Call Failed');
+      log(e.toString());
       allShopProductDetails.value = ShopProductsDetails(products: [], categories: [], users: []);
     }
   }
@@ -75,9 +88,5 @@ class ProductsController extends GetxController {
 
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    productAPICall();
-  }
+
 }

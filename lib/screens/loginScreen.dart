@@ -11,19 +11,14 @@ import 'package:preetprab/screens/registerScreen.dart';
 import '../utils/auth.dart';
 
 class LoginPage extends StatelessWidget {
-
   LoginPage({super.key});
 
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
-  SignController signController = Get.put(SignController());
+  final SignController signController = Get.put(SignController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white ,
-
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
@@ -45,7 +40,7 @@ class LoginPage extends StatelessWidget {
               child: Center(
                 child: TextFormField(
                   textAlignVertical: TextAlignVertical.center, // Centers the text vertically
-                  controller: usernameController,
+                  controller: signController.usernameController,
                   decoration: const InputDecoration(
 
                     prefixIcon: Icon(Icons.email),
@@ -71,8 +66,10 @@ class LoginPage extends StatelessWidget {
               ()=> SizedBox(
                 height: 50,
                 child: TextFormField(
+                  enableSuggestions: false,
+                  autocorrect: false,
                   textAlignVertical: TextAlignVertical.center,
-                  controller: passwordController,
+                  controller: signController.passwordController,
                   obscureText: signController.obscure.value,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.zero,
@@ -113,8 +110,9 @@ class LoginPage extends StatelessWidget {
                     FocusScope.of(context).unfocus();
                         signController.isLoading.value = true;
                         bool isValid = await AuthService().authenticate(
-                            usernameController.text, passwordController.text);
+                            signController.usernameController.text, signController.passwordController.text);
                         log("The User validation is ${isValid.toString()}");
+                        if(!isValid) signController.isLoading.value = false;
                         isValid
                             ? Get.offAll(() => HomeScreen())
                             : null;

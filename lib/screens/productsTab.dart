@@ -114,7 +114,7 @@ class _FirstTabState extends State<FirstTab>
                             AppBar().preferredSize.height -
                             kBottomNavigationBarHeight,
                         child: const Center(
-                            child: CircularProgressIndicator(
+                            child: CupertinoActivityIndicator(
                           color: baseColor,
                         )));
                   } else if (productsController
@@ -320,9 +320,9 @@ class _FirstTabState extends State<FirstTab>
                                                               .isNotEmpty
                                                           ? gridProducts[index]
                                                               .images[0]
-                                                          : 'https://preetprab.com/wp-content/uploads/2024/04/IMG-20240401-WA0107.jpg'),
+                                                          : imageErrorHandler),
 
-                                                  /// Incase the images array from API is empty
+                                                  /// In case the images array from API is empty
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),

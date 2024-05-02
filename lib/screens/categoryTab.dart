@@ -190,10 +190,12 @@ class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClient
                                             const BorderRadius.all(
                                                 Radius.circular(20)),
                                         image: DecorationImage(
-                                          image: CachedNetworkImageProvider(
+                                          image:  CachedNetworkImageProvider(
+
                                               productsController
                                                   .categorisedList[index]
-                                                  .images[0]),
+                                                  .images.isNotEmpty ? productsController.categorisedList[index].images[0] :
+                                              imageErrorHandler),
                                           fit: BoxFit.cover,
                                         ),
                                       ),

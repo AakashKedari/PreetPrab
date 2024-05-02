@@ -84,7 +84,7 @@ class ProductInfo extends StatelessWidget {
                                                 string, downloadProgress) {
                                               return const Center(
                                                   child:
-                                                      CircularProgressIndicator());
+                                                      CupertinoActivityIndicator());
                                             },
                                             errorWidget:
                                                 (context, url, error) =>
@@ -104,37 +104,23 @@ class ProductInfo extends StatelessWidget {
                             loop: true,
                             itemCount: product!.images.length,
                             itemBuilder: (context, currentSlidedIndex) {
-                              return Stack(
-                                alignment: AlignmentDirectional.center,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: CachedNetworkImage(
-                                      filterQuality: FilterQuality.high,
-                                      fit: BoxFit.cover,
-                                      imageUrl:
-                                          product!.images[currentSlidedIndex],
-                                      progressIndicatorBuilder:
-                                          (context, string, downloadProgress) {
-                                        return const SizedBox(
-                                            height: 200,
-                                            width: 200,
-                                            child: Center(
-                                                child:
-                                                    CircularProgressIndicator()));
-                                      },
-                                    ),
-                                  ),
-                                  const Positioned(
-                                    top: 10,
-                                    right: 20,
-                                    child: Icon(
-                                      Icons.fullscreen,
-                                      size: 30,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: CachedNetworkImage(
+                                  filterQuality: FilterQuality.high,
+                                  fit: BoxFit.cover,
+                                  imageUrl:
+                                      product!.images[currentSlidedIndex],
+                                  progressIndicatorBuilder:
+                                      (context, string, downloadProgress) {
+                                    return const SizedBox(
+                                        height: 200,
+                                        width: 200,
+                                        child: Center(
+                                            child:
+                                                CupertinoActivityIndicator()));
+                                  },
+                                ),
                               );
                             },
                           ),
@@ -219,7 +205,7 @@ class ProductInfo extends StatelessWidget {
                                   scrollDirection: Axis.horizontal,
                                   shrinkWrap: true,
                                   itemBuilder: (context, index) {
-                                    return Obx(() => GestureDetector(
+                                    return Obx(() => InkWell(
                                           onTap: () {
                                             _productInfoController
                                                 .selectedColorIndex
@@ -270,7 +256,7 @@ class ProductInfo extends StatelessWidget {
                                 itemCount: 4,
                                 itemBuilder: (context, index) {
                                   return Obx(
-                                    () => GestureDetector(
+                                    () => InkWell(
                                         onTap: () {
                                           productsController
                                               .selectedSizeIndex.value = index;
@@ -319,18 +305,21 @@ class ProductInfo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Material(
-                        color: Colors.white,
-                        child: IconButton(
-                          onPressed: () {
-                            productsController.wishlistProducts.add(product!);
-                          },
-                          icon: Icon(
-                            MdiIcons.heartPlus,
-                            size: 30,
-                            color: baseColor,
-                          ),
-                        )),
+                    Obx(
+                      () => Material(
+                          color: Colors.white,
+                          child: IconButton(
+                            onPressed: () {
+                              productsController.wishlistProducts.contains(product!) ? productsController.wishlistProducts.remove(product!)
+                              : productsController.wishlistProducts.add(product!);
+                            },
+                            icon: Icon(
+                              productsController.wishlistProducts.contains(product!) ? MdiIcons.heart : Icons.favorite_outline_sharp,
+                              size: 30,
+                              color: productsController.wishlistProducts.contains(product!) ? Colors.red : Colors.black,
+                            ),
+                          )),
+                    ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       width: MediaQuery.of(context).size.width - 100,
