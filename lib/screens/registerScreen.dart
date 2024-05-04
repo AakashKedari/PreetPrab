@@ -1,22 +1,15 @@
-import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:preetprab/const.dart';
-import 'package:preetprab/controllers/signController.dart';
-import 'package:preetprab/screens/home.dart';
+import 'package:preetprab/controllers/authController.dart';
 import 'package:preetprab/screens/loginScreen.dart';
-import 'package:preetprab/utils/auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
 
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final SignController signController = Get.put(SignController());
+  final AuthController authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +21,27 @@ class RegisterPage extends StatelessWidget {
         title: Image.asset(
           'assets/images/transparent.png',
           width: 120,
+          filterQuality: FilterQuality.high,
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Join P&P Family',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w800, color: baseColor),
+              textAlign: TextAlign.start,
+            ),
+            const Gap(10),
             SizedBox(
               height: 50,
               child: TextFormField(
-
                 textAlignVertical: TextAlignVertical.center,
-                controller: usernameController,
+                controller: authController.registerNameController,
                 decoration: const InputDecoration(
                   contentPadding: EdgeInsets.zero,
                   prefixIcon: Icon(Icons.perm_identity),
@@ -65,7 +66,7 @@ class RegisterPage extends StatelessWidget {
               height: 50,
               child: TextFormField(
                 textAlignVertical: TextAlignVertical.center,
-                controller: emailController,
+                controller: authController.registerEmailController,
                 decoration: const InputDecoration(
                   contentPadding: EdgeInsets.zero,
                   prefixIcon: Icon(Icons.email),
@@ -93,17 +94,17 @@ class RegisterPage extends StatelessWidget {
                   enableSuggestions: false,
                   autocorrect: false,
                   textAlignVertical: TextAlignVertical.center,
-                  obscureText: signController.obscure.value,
-                  controller: passwordController,
+                  obscureText: authController.obscure.value,
+                  controller: authController.registerPasswordController,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.zero,
                     prefixIcon: const Icon(Icons.password),
                     suffixIcon: IconButton(
                       onPressed: () {
-                        signController.obscure.value =
-                            !signController.obscure.value;
+                        authController.obscure.value =
+                            !authController.obscure.value;
                       },
-                      icon: signController.obscure.value
+                      icon: authController.obscure.value
                           ? const Icon(
                               Icons.visibility,
                               color: baseColor,
@@ -132,28 +133,12 @@ class RegisterPage extends StatelessWidget {
             ),
             const Gap(10),
             Obx(() {
-              return !signController.isLoading.value
+              return !authController.isLoading.value
                   ? MaterialButton(
                       minWidth: double.infinity,
                       shape: const StadiumBorder(),
                       color: baseColor,
-                      onPressed: () async {
-                        /// To make the keyboard disappear if using decides to click login button
-                        FocusScope.of(context).unfocus();
-                        signController.isLoading.value = true;
-                        bool isRegistered = await AuthService().registerUser(
-                            usernameController.text,
-                            emailController.text,
-                            passwordController.text);
-                        log('isRegisted : $isRegistered');
-                        if (isRegistered) {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          prefs.setBool('isLoggedIn', true);
-                        }
-                        signController.isLoading.value = false;
-                        isRegistered ? Get.to(() => HomeScreen()) : null;
-                      },
+                      onPressed: authController.registerNewUser,
                       child: const Text(
                         'Register',
                         style: TextStyle(color: Colors.white),
@@ -171,7 +156,7 @@ class RegisterPage extends StatelessWidget {
                 const Text('Already Registered?'),
                 TextButton(
                     onPressed: () {
-                      Get.offAll(LoginPage());
+                      Get.offAll(() => LoginPage());
                     },
                     child: const Text(
                       'Login',

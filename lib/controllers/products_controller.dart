@@ -1,14 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:dio/dio.dart' as DIO;
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:preetprab/const.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
-
 
 class ProductsController extends GetxController {
   var allShopProductDetails = Rx<ShopProductsDetails?>(null);
@@ -48,7 +43,6 @@ class ProductsController extends GetxController {
     dscProducts.value = allShopProductDetails.value!.products;
     allShopProductDetails.value!.products = temp;
     filterName.value = 'High to Low';
-    update();
   }
 
   Future productAPICall() async {
@@ -61,7 +55,6 @@ class ProductsController extends GetxController {
     log('APIMethod');
     try {
       DIO.Response response = await dio.get(APIUrls.allProducts);
-      print("Response: ${response}");
 
       /// Decode the response data
       Map<String, dynamic> decoded = jsonDecode(response.toString());

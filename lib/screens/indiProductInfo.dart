@@ -40,6 +40,7 @@ class ProductInfo extends StatelessWidget {
         title: Image.asset(
           'assets/images/transparent.png',
           width: 120,
+          filterQuality: FilterQuality.high,
         ),
         actions: const [Icon(CupertinoIcons.cart), Gap(10)],
       ),
@@ -89,6 +90,7 @@ class ProductInfo extends StatelessWidget {
                                             errorWidget:
                                                 (context, url, error) =>
                                                     const Icon(Icons.error),
+                                            filterQuality: FilterQuality.high,
                                           ),
                                         ),
                                       ),

@@ -24,6 +24,7 @@ Widget ProfileTab() {
             child: Image.asset(
               'assets/images/settings.png',
               fit: BoxFit.cover,
+              filterQuality: FilterQuality.high,
             ),
           ),
           ListTile(

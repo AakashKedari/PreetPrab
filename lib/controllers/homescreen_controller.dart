@@ -44,6 +44,7 @@ class HomeScreenController extends GetxController {
 
   @override
   void onClose() {
+    timer?.cancel();
     hintStreamController.close();
     confettiController.dispose();
 

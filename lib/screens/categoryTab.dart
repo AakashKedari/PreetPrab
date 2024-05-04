@@ -18,7 +18,8 @@ class CategoryTab extends StatefulWidget {
   State<CategoryTab> createState() => _CategoryTabState();
 }
 
-class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClientMixin {
+class _CategoryTabState extends State<CategoryTab>
+    with AutomaticKeepAliveClientMixin {
   final ScrollController scrollController = ScrollController();
 
   @override
@@ -26,25 +27,30 @@ class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClient
     // TODO: implement initState
     super.initState();
 
-    if(widget.bannerProductName !='') {
+    if (widget.bannerProductName != '') {
       productsController.categorisedList.value = productsController
           .allShopProductDetails.value!.products
           .where((product) {
-        return product.categories.contains(bannertoProduct[widget.bannerProductName]);
+        return product.categories
+            .contains(bannertoProduct[widget.bannerProductName]);
       }).toList();
 
-      Future.delayed(const Duration(milliseconds: 500),(){
-        scrollController.animateTo(MediaQuery.of(context).size.height - kBottomNavigationBarHeight - AppBar().preferredSize.height, duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
-
+      Future.delayed(const Duration(milliseconds: 500), () {
+        scrollController.animateTo(
+            MediaQuery.of(context).size.height -
+                kBottomNavigationBarHeight -
+                AppBar().preferredSize.height,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeOut);
       });
     }
   }
 
   Map bannertoProduct = {
-    'Kurtis' : CategoryEnum.KURTIS,
-    'Gowns' : CategoryEnum.GOWN,
-    'Short Dress' : CategoryEnum.SHORT_DRESSES,
-    'Long Dress' : CategoryEnum.LONG_DRESSES
+    'Kurtis': CategoryEnum.KURTIS,
+    'Gowns': CategoryEnum.GOWN,
+    'Short Dress': CategoryEnum.SHORT_DRESSES,
+    'Long Dress': CategoryEnum.LONG_DRESSES
   };
 
   final GlobalKey _imageKey = GlobalKey();
@@ -68,7 +74,6 @@ class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClient
 
   @override
   Widget build(BuildContext context) {
-
     super.build(context);
 
     log('Category Tab Built');
@@ -82,13 +87,23 @@ class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClient
         title: Image.asset(
           'assets/images/transparent.png',
           width: 120,
+          filterQuality: FilterQuality.high,
         ),
         actions: [
-          const Icon(Icons.favorite_outline_sharp,color: baseColor,),
+          const Icon(
+            Icons.favorite_outline_sharp,
+            color: baseColor,
+          ),
           const Gap(15),
-          const Icon(Icons.notifications,color: baseColor,),
+          const Icon(
+            Icons.notifications,
+            color: baseColor,
+          ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.filter_alt_rounded,color: baseColor,),
+            icon: const Icon(
+              Icons.filter_alt_rounded,
+              color: baseColor,
+            ),
             onSelected: (value) {
               value == 'Low to High'
                   ? productsController.sortProductsByPriceAsc()
@@ -135,12 +150,20 @@ class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClient
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      baseColor,
+                                  baseColor,
                                   Colors.brown.shade300,
-
                                 ])),
                             height: 80,
                             child: ListTile(
+                              trailing: ClipRRect(
+                                borderRadius: BorderRadius.circular(5.0),
+                                child: Image.asset(
+                                  'assets/images/banner_2.png',
+                                  fit: BoxFit.cover,
+                                  filterQuality: FilterQuality.high,
+                                ), // Rounded corners
+                              ),
+                              dense: false,
                               title: Text(
                                 CategoryEnum.values[index].name,
                                 style: const TextStyle(color: Colors.white),
@@ -148,7 +171,6 @@ class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClient
                             ),
                           ),
                         ),
-
                       ],
                     );
                   }),
@@ -181,21 +203,22 @@ class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClient
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(20)),
                                     child: Container(
-                                      height: MediaQuery.of(context)
-                                              .size
-                                              .height *
-                                          0.3,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.3,
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(20)),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(20)),
                                         image: DecorationImage(
-                                          image:  CachedNetworkImageProvider(
-
+                                          image: CachedNetworkImageProvider(
                                               productsController
-                                                  .categorisedList[index]
-                                                  .images.isNotEmpty ? productsController.categorisedList[index].images[0] :
-                                              imageErrorHandler),
+                                                      .categorisedList[index]
+                                                      .images
+                                                      .isNotEmpty
+                                                  ? productsController
+                                                      .categorisedList[index]
+                                                      .images[0]
+                                                  : imageErrorHandler),
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -221,55 +244,60 @@ class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClient
                                     child: Row(
                                       children: [
                                         Obx(
-                                              () => IconButton(
+                                          () => IconButton(
                                               onPressed: () {
                                                 productsController
-                                                    .wishlistProducts
-                                                    .contains(
-                                                    productsController.categorisedList[
-                                                    index])
+                                                        .wishlistProducts
+                                                        .contains(productsController
+                                                                .categorisedList[
+                                                            index])
                                                     ? productsController
-                                                    .wishlistProducts
-                                                    .remove(productsController.categorisedList[
-                                                index])
+                                                        .wishlistProducts
+                                                        .remove(productsController
+                                                                .categorisedList[
+                                                            index])
                                                     : productsController
-                                                    .wishlistProducts
-                                                    .add(productsController.categorisedList[
-                                                index]);
+                                                        .wishlistProducts
+                                                        .add(productsController
+                                                                .categorisedList[
+                                                            index]);
                                               },
                                               icon: Icon(
-                                                productsController.wishlistProducts.contains(productsController.categorisedList[index]) ? Icons.favorite :
-                                                Icons.favorite_outline_sharp,
+                                                productsController
+                                                        .wishlistProducts
+                                                        .contains(productsController
+                                                                .categorisedList[
+                                                            index])
+                                                    ? Icons.favorite
+                                                    : Icons
+                                                        .favorite_outline_sharp,
                                                 color: baseColor,
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            !productsController
-                                                .savedProducts
-                                                .contains(
-                                                productsController.categorisedList[index])
+                                            !productsController.savedProducts
+                                                    .contains(productsController
+                                                        .categorisedList[index])
                                                 ? productsController
-                                                .savedProducts
-                                                .add(
-                                                productsController.categorisedList[index])
+                                                    .savedProducts
+                                                    .add(productsController
+                                                        .categorisedList[index])
                                                 : null;
                                           },
                                           child: Container(
                                             decoration: BoxDecoration(
                                                 color: baseColor,
                                                 borderRadius:
-                                                BorderRadius.circular(
-                                                    10)),
+                                                    BorderRadius.circular(10)),
                                             height: 25,
                                             width: 100,
                                             child: Center(
                                               child: Text(
-                                                productsController
-                                                    .savedProducts
-                                                    .contains(
-                                                    productsController.categorisedList[
-                                                    index])
+                                                productsController.savedProducts
+                                                        .contains(productsController
+                                                                .categorisedList[
+                                                            index])
                                                     ? 'In Bag'
                                                     : 'ADD TO BAG',
                                                 style: const TextStyle(

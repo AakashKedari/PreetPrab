@@ -40,7 +40,13 @@ class _WishListTabState extends State<WishListTab> with AutomaticKeepAliveClient
                     ),
                     trailing: MaterialButton(
                       color: Colors.black,
-                      onPressed: (){    },
+                      /// Here, on press, we add all the wishlist Items to My Cart
+                      onPressed: (){
+                        for(int i=0;i<productsController.wishlistProducts.length;i++){
+                          productsController.savedProducts.add(productsController.wishlistProducts[i]);
+                        }
+                        productsController.wishlistProducts.clear();
+                      },
                       child: const Text('ADD TO BAG',style: TextStyle(color: Colors.white),),
                     )),
                 ListView.builder(
@@ -69,6 +75,7 @@ class _WishListTabState extends State<WishListTab> with AutomaticKeepAliveClient
                                 width: MediaQuery.of(context).size.width * 0.3,
                                 imageUrl: productsController
                                     .wishlistProducts[index].images[0],
+                                filterQuality: FilterQuality.high,
                               ),
                               const Gap(10),
                               Expanded(

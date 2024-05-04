@@ -8,14 +8,15 @@ import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/screens/indiProductInfo.dart';
 import 'checkout.dart';
 
-class CartTab extends StatefulWidget {
-  CartTab({super.key});
+class MyCartTab extends StatefulWidget {
+  MyCartTab({super.key});
 
   @override
-  State<CartTab> createState() => _CartTabState();
+  State<MyCartTab> createState() => _MyCartTabState();
 }
 
-class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin {
+class _MyCartTabState extends State<MyCartTab>
+    with AutomaticKeepAliveClientMixin {
   final ProductsController productsController = Get.find<ProductsController>();
 
   @override
@@ -45,8 +46,13 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin {
                   ),
                   trailing: MaterialButton(
                     color: Colors.black,
-                    onPressed: (){    Get.to(() => const CheckOut()) ;},
-                    child: const Text('CHECKOUT',style: TextStyle(color: Colors.white),),
+                    onPressed: () {
+                      Get.to(() => const CheckOut());
+                    },
+                    child: const Text(
+                      'CHECKOUT',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   )),
               ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
@@ -56,8 +62,7 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin {
                     return InkWell(
                       onTap: () {
                         Get.to(() => ProductInfo(
-                            product: productsController
-                                .savedProducts[index]));
+                            product: productsController.savedProducts[index]));
                       },
                       child: Card(
                         child: Row(
@@ -73,13 +78,14 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin {
                               height: MediaQuery.of(context).size.height * 0.3,
                               width: MediaQuery.of(context).size.width * 0.3,
                               imageUrl: productsController
-                                  .savedProducts[index].images![0],
+                                  .savedProducts[index].images[0],
+                              filterQuality: FilterQuality.high,
                             ),
                             const Gap(10),
                             Expanded(
                               child: SizedBox(
-                                height: MediaQuery.of(context).size.height * 0.2,
-
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -88,12 +94,33 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin {
                                       child: Text(
                                         productsController
                                             .savedProducts[index].title!,
-                                        style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
+                                        style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
                                         maxLines: 3,
                                       ),
                                     ),
                                     Text(
                                         "Rs. ${productsController.savedProducts[index].price}"),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        IconButton(
+                                          color: baseColor,
+                                          icon: const Icon(Icons.remove,size: 12,),
+                                          onPressed: () {},
+                                        ),
+                                        const Text('1',
+                                            style: TextStyle(fontSize: 20)),
+                                        IconButton(
+                                          color: baseColor,
+                                          icon: const Icon(Icons.add,size: 12,),
+                                          onPressed: () {},
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
                               ),
@@ -120,13 +147,11 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin {
                                 )),
                         Text(
                           productsController.savedProducts.length.toString(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.w100,
-                                color: Colors.grey,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w100,
+                                    color: Colors.grey,
+                                  ),
                         )
                       ],
                     ),
@@ -135,21 +160,17 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin {
                       children: [
                         Text(
                           'Total : ',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                         Text(
                           'Rs. ${totalCost.toString()}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         )
                       ],
                     ),

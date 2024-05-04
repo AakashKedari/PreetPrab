@@ -8,7 +8,7 @@ class TnCWidget extends StatelessWidget {
   final String termsUrl;
   final String privacyUrl;
 
-  TnCWidget({
+  const TnCWidget({super.key,
     required this.termsUrl,
     required this.privacyUrl,
   });
@@ -26,6 +26,7 @@ class TnCWidget extends StatelessWidget {
             style: const TextStyle(color: Colors.white,decoration: TextDecoration.underline,fontWeight: FontWeight.w900),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
+              // TODO: adding a URl to the privacy policy of App
               // launch(termsUrl);
               },
           ),
@@ -39,6 +40,7 @@ class TnCWidget extends StatelessWidget {
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
+                // TODO: adding a URl to the privacy policy of App
               // launch(privacyUrl);
               },
           ),
