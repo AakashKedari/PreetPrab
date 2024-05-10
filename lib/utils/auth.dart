@@ -12,7 +12,6 @@ class AuthService{
   static String? currentUser;
   static String? currentUserEmail;
 
-
   //   ..interceptors.add( RetryInterceptor(
   //
   //     dio: dio,
@@ -22,7 +21,6 @@ class AuthService{
   //       retryEvaluator: (error) => error.type != DioErrorType.CANCEL && error.type != DioErrorType.RESPONSE, // Evaluating if a request should be retried
   //     ),
   //   ));
-
 
   Future<bool> authenticate(String username,String password) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();

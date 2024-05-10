@@ -6,13 +6,14 @@ import 'package:get/get.dart';
 import 'package:preetprab/const.dart';
 import 'package:preetprab/controllers/products_controller.dart';
 import 'package:preetprab/main.dart';
+import 'package:preetprab/screens/home.dart';
 import '../models/shopProductsDetails.dart';
 import 'indiProductInfo.dart';
 
 class CategoryTab extends StatefulWidget {
   final String bannerProductName;
 
-  CategoryTab({super.key, this.bannerProductName = ''});
+  const CategoryTab({super.key, this.bannerProductName = ''});
 
   @override
   State<CategoryTab> createState() => _CategoryTabState();
@@ -24,7 +25,6 @@ class _CategoryTabState extends State<CategoryTab>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     if (widget.bannerProductName != '') {
@@ -32,7 +32,7 @@ class _CategoryTabState extends State<CategoryTab>
           .allShopProductDetails.value!.products
           .where((product) {
         return product.categories
-            .contains(bannertoProduct[widget.bannerProductName]);
+            .contains(bannerToProduct[widget.bannerProductName]);
       }).toList();
 
       Future.delayed(const Duration(milliseconds: 500), () {
@@ -46,7 +46,7 @@ class _CategoryTabState extends State<CategoryTab>
     }
   }
 
-  Map bannertoProduct = {
+  Map bannerToProduct = {
     'Kurtis': CategoryEnum.KURTIS,
     'Gowns': CategoryEnum.GOWN,
     'Short Dress': CategoryEnum.SHORT_DRESSES,
@@ -73,13 +73,27 @@ class _CategoryTabState extends State<CategoryTab>
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    scrollController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
 
     log('Category Tab Built');
     return Scaffold(
+
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: (){
+            Get.back();
+          },
+        ),
         surfaceTintColor: Colors.white,
         backgroundColor: const Color(0xFFFFFFFF),
         elevation: 8,
@@ -155,14 +169,14 @@ class _CategoryTabState extends State<CategoryTab>
                                 ])),
                             height: 80,
                             child: ListTile(
-                              trailing: ClipRRect(
-                                borderRadius: BorderRadius.circular(5.0),
-                                child: Image.asset(
-                                  'assets/images/banner_2.png',
-                                  fit: BoxFit.cover,
-                                  filterQuality: FilterQuality.high,
-                                ), // Rounded corners
-                              ),
+                              // trailing: ClipRRect(
+                              //   borderRadius: BorderRadius.circular(5.0),
+                              //   child: Image.asset(
+                              //     'assets/images/banner_2.png',
+                              //     fit: BoxFit.cover,
+                              //     filterQuality: FilterQuality.high,
+                              //   ), // Rounded corners
+                              // ),
                               dense: false,
                               title: Text(
                                 CategoryEnum.values[index].name,
@@ -324,6 +338,6 @@ class _CategoryTabState extends State<CategoryTab>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
 }

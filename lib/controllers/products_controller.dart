@@ -6,6 +6,7 @@ import 'package:preetprab/const.dart';
 import 'package:preetprab/models/shopProductsDetails.dart';
 
 class ProductsController extends GetxController {
+
   var allShopProductDetails = Rx<ShopProductsDetails?>(null);
   var ascProducts = <Product>[].obs;
   var dscProducts = <Product>[].obs;

@@ -111,9 +111,11 @@ class _ProductsListTabState extends State<ProductsListTab>
                         AppBar().preferredSize.height -
                         kBottomNavigationBarHeight,
                     child: const Center(
-                        child: CupertinoActivityIndicator(
+                        child:
+                        CupertinoActivityIndicator(
                       color: baseColor,
-                    )));
+                    )
+                    ));
               }
 
               /// In case some error occurs during API Call like No Internet, we show Retry Button
@@ -165,7 +167,7 @@ class _ProductsListTabState extends State<ProductsListTab>
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   InkWell(
-                                    onTap: () => Get.to(() => CategoryTab(
+                                    onTap: () => Get.to( CategoryTab(
                                           bannerProductName: index == 0
                                               ? 'Kurtis'
                                               : index == 1
@@ -402,15 +404,17 @@ class _ProductsListTabState extends State<ProductsListTab>
                                             height: 25,
                                             width: 100,
                                             child: Center(
-                                              child: Text(
-                                                productsController.savedProducts
-                                                        .contains(
-                                                            gridProducts[index])
-                                                    ? 'In Bag'
-                                                    : 'ADD TO BAG',
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12),
+                                              child: Obx(
+                                                () => Text(
+                                                  productsController.savedProducts
+                                                          .contains(
+                                                              gridProducts[index])
+                                                      ? 'In Bag'
+                                                      : 'ADD TO BAG',
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12),
+                                                ),
                                               ),
                                             ),
                                           ),

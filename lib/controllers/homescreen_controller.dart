@@ -8,7 +8,6 @@ import 'package:preetprab/models/shopProductsDetails.dart';
 class HomeScreenController extends GetxController {
 
   RxInt currentIndex = 0.obs;
-
   ConfettiController confettiController = ConfettiController(duration: const Duration(seconds: 2));
 
   StreamController<String> hintStreamController = StreamController<String>.broadcast();
@@ -19,8 +18,6 @@ class HomeScreenController extends GetxController {
 
   Timer? timer;
 
-  RxString currentHint = CategoryEnum.values[0].name.obs;
-
    Rx<Widget?> label = null.obs;
 
    RxBool couponReveal = false.obs;
@@ -28,17 +25,13 @@ class HomeScreenController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    final random = Random();
-    print('Coupn Code : $couponCode');
-    currentHint = CategoryEnum.values[0].name.obs;
+    print('Coupon Code : $couponCode');
     timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       if (hintIndex == 5) {
         hintIndex = 0;
-
       }
       hintIndex = (hintIndex + 1);
       hintStreamController.add(CategoryEnum.values[hintIndex].name);
-      currentHint = CategoryEnum.values[hintIndex].name.obs;
     });
   }
 
@@ -47,7 +40,6 @@ class HomeScreenController extends GetxController {
     timer?.cancel();
     hintStreamController.close();
     confettiController.dispose();
-
     super.onClose();
   }
 }
